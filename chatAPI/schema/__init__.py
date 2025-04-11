@@ -1,1 +1,1 @@
-from .schema import QueryInput
+from .schema import QueryInput, StoreArguments

@@ -32,12 +32,11 @@ def update_vector_store():
     return "Hi"
 
 @app.get("/response")
-def generate_response(query:str,senderid:str,metadata={},source:str="web"):
+def chat_response(query:str,senderId:str,metadata={},source:str="web"):
     try:
-
         response = generate_response(
             user_query = query,
-            user_id = senderid,
+            user_id = senderId,
             graph = graph,
             user_metadata = metadata,
             sqlite_conn = conn
