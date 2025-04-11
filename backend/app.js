@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
-const tradeRoutes = require('./routes/tradeRoutes')
+const tradeRoutes = require('./routes/tradeRoutes');
+const portfolioRoutes = require("./routes/portfolioRoutes");
 
 const app = express();
 const cors = require('cors');
@@ -24,6 +25,8 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/courses', courseRoutes); 
 app.use('/trade',tradeRoutes);
+app.use("/portfolio", portfolioRoutes);
+
 
 // Health check
 app.get('/', (req, res) => {
