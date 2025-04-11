@@ -1,9 +1,9 @@
 const users = [];
 
 class User {
-  static async create({ email, username, password }) {
+  static async create({ userId, email, username, password }) {
     const user = {
-      id: Date.now().toString(),
+      userId,
       email,
       username,
       password
@@ -20,8 +20,8 @@ class User {
     return users.find(user => user.username === username);
   }
 
-  static async findById(id) {
-    return users.find(user => user.id === id);
+  static async findById(userId) {
+    return users.find(user => user.userId === userId);
   }
 
   static async findByEmailOrUsername(emailOrUsername) {

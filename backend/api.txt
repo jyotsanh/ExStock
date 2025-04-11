@@ -1,8 +1,0 @@
-#signup
-http://localhost:3000/auth/signup
-
-#login
-http://localhost:3000/auth/login
-
-#getprofile needs token to view own profile
-http://localhost:3000/users/profile
