@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const tradeRoutes = require('./routes/tradeRoutes')
 
 const app = express();
 
@@ -18,7 +19,8 @@ app.use((req, res, next) => {
 // Routes
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
-app.use('/courses', courseRoutes); // changed to plural
+app.use('/courses', courseRoutes); 
+app.use('/trade',tradeRoutes);
 
 // Health check
 app.get('/', (req, res) => {

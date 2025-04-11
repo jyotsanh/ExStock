@@ -22,4 +22,20 @@ const courseSchema = new mongoose.Schema({
   ],
 }, { timestamps: true });
 
+courseSchema.statics.calculateScore = function(course, userAnswers) {
+  let score = 0;
+
+  course.quiz.forEach((q, i) => {
+    const userAnswer = userAnswers[i];
+    if (
+      userAnswer &&
+      userAnswer.trim().toLowerCase() === q.answer.trim().toLowerCase()
+    ) {
+      score++;
+    }
+  });
+
+  return score;
+};
+
 module.exports = mongoose.model('Course', courseSchema);
