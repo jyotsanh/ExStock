@@ -4,19 +4,21 @@ load_dotenv()
 OPENAI_KEY = os.getenv("OPENAI_KEY")
 
 def get_llm(model_name:str="openai",temperature=0.6):
-    if model_name == "gpt-4o-mini":
-        return ChatOpenAI(
-                    api_key = OPENAI_KEY,
-                    model=model_name,
-                    temperature=temperature
-                )
-    elif model_name == "gemini":
-        return ChatOpenAI(
-                    api_key = "45678dfghjcvbn",
-                    model=model_name,
-                    temperature=temperature
-        )
-
+    try:
+        if model_name == "openai":
+            return ChatOpenAI(
+                        api_key = OPENAI_KEY,
+                        model="gpt-4o-mini",
+                        temperature=temperature
+                    )
+        elif model_name == "gemini":
+            return ChatOpenAI(
+                        api_key = "45678dfghjcvbn",
+                        model=model_name,
+                        temperature=temperature
+            )
+    except Exception as e:
+        print(f"[ERROR] -> file models.py -> function `get_llm` : \n {e} \n")
 def get_embeddings():
     embeddings=OpenAIEmbeddings(api_key=OPENAI_KEY )
     return embeddings        

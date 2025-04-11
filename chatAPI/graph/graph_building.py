@@ -1,15 +1,23 @@
 import sqlite3
 
+
 # dir: Libs
 from Libs.libs import *
 
 from core.assistant import MyState, Assistant, create_entry_node
 
+from graph.utility import create_tool_node_with_fallback, pop_dialog_state
+
 from .assistant import (
     get_course_suggest_master_assistant_runnable,
     get_exopy_course_master_assistant_runnable,
     get_primary_assistant_runnable,
-    get_stock_genius_master_assistant_runnable
+    get_stock_genius_master_assistant_runnable,
+
+
+    course_suggest_master_tools,
+    genius_assistant_tools,
+    tutor_assistant_tools,
 )
 
 from .routes import (
@@ -19,6 +27,11 @@ from .routes import (
         entry_exopy_course_master_assistant_routes,
     )
 
+from graph.tools import (
+    our_course_tool,
+    our_tutor_tool,
+    knowledge_of_stocks
+)
 
 def build_graph(conn:sqlite3.Connection):
     try:
@@ -95,7 +108,8 @@ def build_graph(conn:sqlite3.Connection):
                 "course_suggest_master_assistant",
                 entry_course_suggest_master_assistant_routes,
                 [
-                    "suggest_master_tools",
+                    "course_suggester_tools",
+                    "leaveskill",
                     END,
                 ]   
             )
@@ -104,7 +118,8 @@ def build_graph(conn:sqlite3.Connection):
             "stock_genius_master_assistant",
             entry_exopy_course_master_assistant_routes,
             [
-                "suggest_master_tools",
+                "stock_genius_tutor_tools",
+                "leaveskill",
                 END,
             ]   
         )
@@ -113,18 +128,51 @@ def build_graph(conn:sqlite3.Connection):
             "exopy_course_tutor_master_assistant",
             entry_exopy_course_master_assistant_routes,
             [
-                "suggest_master_tools",
+                "exopy_course_tutor_tools",
+                "leaveskill",
                 END,
             ]
+        )
+
+        builder.add_node("leaveskill",pop_dialog_state)
+        builder.add_edge("leaveskill","primary_assistant")
+        
+        builder.add_node(
+                "stock_genius_tutor_tools", # -> knows everything about stock
+                create_tool_node_with_fallback(genius_assistant_tools)
+            )
+        
+        builder.add_node(
+                "course_suggester_tools", # -> suggest the course a person should  use should take
+                create_tool_node_with_fallback(course_suggest_master_tools)
+        )
+        
+                
+        builder.add_node(
+                "exopy_course_tutor_tools", # -> helps person in our course tutor
+                create_tool_node_with_fallback(tutor_assistant_tools)
+            )
+        
+
+        builder.add_edge(
+            "stock_genius_tutor_tools","stock_genius_master_assistant"
+        )
+
+        builder.add_edge(
+            "course_suggester_tools","course_suggest_master_assistant"
+        )
+
+        builder.add_edge(
+            "exopy_course_tutor_tools","exopy_course_tutor_master_assistant"
         )
 
         memory = SqliteSaver(conn=conn)
         
         graph = builder.compile(
-            checkpointer=memory, 
+            checkpointer=memory
         )
-        # from IPython.display import Image, display
-        # graph.get_graph().draw_mermaid_png(output_file_path="./graph.png")
+        from IPython.display import Image, display
+        graph.get_graph().draw_mermaid_png(output_file_path="./graph.png")
         return graph
     except Exception as e:
 

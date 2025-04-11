@@ -21,6 +21,7 @@ def generate_response(
                 {
                     'messages': ('user', user_query),
                     'user_info': user_metadata,
+                    'prefers':user_metadata.get('prefers','english') # -> gets the prefers language otherwise fallback to english
                 },
                 config
             )

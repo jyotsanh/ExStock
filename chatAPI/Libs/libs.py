@@ -79,7 +79,10 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 REDIS_SERVER=os.getenv('REDIS_SERVER')  or 'localhost'
-llm = get_llm('gpt-4o-mini')
+llm = get_llm(
+                model_name='gpt-4o-mini'
+                
+                )
 embeddings = get_embeddings()
 
 # Parser to parse the output
@@ -97,6 +100,6 @@ LOCAL_PORT = os.getenv("LOCAL_PORT")
 OPENAI_KEY = os.getenv("OPENAI_KEY")
 
 llm = get_llm(
-            model='openai',
+            model_name='openai',
             temperature=0.6,
             )

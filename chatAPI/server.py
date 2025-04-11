@@ -35,6 +35,7 @@ def update_vector_store():
 def chat_response(query:str,senderId:str,metadata={},source:str="web"):
     try:
         print(f"[INFO] -> query: {query} | senderId: {senderId} | metadata: {metadata} | source: {source}")
+        metadata['prefers'] = "english"
         response = generate_response(
             user_query = query,
             user_id = senderId,
