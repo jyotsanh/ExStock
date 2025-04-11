@@ -14,3 +14,4 @@ fuzzywuzzy
 python-Levenshtein
 langchain
 langchain_community
+IPython

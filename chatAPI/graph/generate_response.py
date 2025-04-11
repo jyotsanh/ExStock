@@ -3,11 +3,11 @@ from Libs.libs import *
 from graph.utility import delete_thread_entries
 import sqlite3
 def generate_response(
-    user_query:str,
-    user_id:str,
-    graph:Runnable,
-    user_metadata:dict,
-    sqlite_conn:sqlite3.Connection,
+        user_query:str,
+        user_id:str,
+        graph:Runnable,
+        user_metadata:dict,
+        sqlite_conn:sqlite3.Connection,
     ):
     try:
         config = {

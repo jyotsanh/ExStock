@@ -94,3 +94,5 @@ from models import VectorStore
 load_dotenv()
 LOCAL_HOST = os.getenv("LOCAL_HOST")
 LOCAL_PORT = os.getenv("LOCAL_PORT")
+
+OPENAI_KEY = os.getenv("OPENAI_KEY")
