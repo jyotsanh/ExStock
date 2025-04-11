@@ -29,7 +29,7 @@ const CandleChart = () => {
     };
     window.addEventListener("resize", handleResize);
 
-    const ws = new WebSocket("ws://192.168.100.88:8015/ws/chart");
+    const ws = new WebSocket("ws://192.168.100.88:8015/ws/stock");
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (Array.isArray(data)) {
