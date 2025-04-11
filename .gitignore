@@ -176,3 +176,6 @@ cython_debug/
 
 backend/node_modules
 backend/package-lock.json
+
+#frontend nodemodule
+frontend/nodemodule
