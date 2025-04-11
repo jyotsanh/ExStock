@@ -2,6 +2,7 @@ from Libs.libs import *
 
 from graph.utility import delete_thread_entries
 import sqlite3
+
 def generate_response(
         user_query:str,
         user_id:str,
@@ -10,6 +11,7 @@ def generate_response(
         sqlite_conn:sqlite3.Connection,
     ):
     try:
+        print("ghjk")
         config = {
             "configurable":{
                 "thread_id":user_id,
