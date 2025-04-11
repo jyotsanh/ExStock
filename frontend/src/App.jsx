@@ -1,21 +1,28 @@
-import React from 'react'
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from './components/Navbar/navbar'
-// import Footer from './components/footer/footer'
+import DashboardLayout from "./pages/Dashboard/DashboardLayout"; // update path as needed
+import SideNavbar from "../src/components/Navbar/navbar";
+import Chatbot from "./pages/chabot/chatbot";
+import Learning from "./pages/learning models/learning";
 
-function App() {
+const App = () => {
   return (
     <Router>
-     <Navbar /> 
+      <div className="flex h-screen">
+        {/* Sidebar on the left */}
+        <SideNavbar />
 
-     <Routes>
-     {/* <Route path="/" element={<Home />} /> */}
+        {/* Main content on the right */}
+        <div className="flex-1 bg-gray-50 overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<DashboardLayout />} />
+            <Route path="/learning-modules" element={<Learning />} />
+          </Routes>
+          <Chatbot/>
+        </div>
+      </div>
+    </Router>
+  );
+};
 
-     </Routes>
-
-     {/* <Footer /> */}
-     </Router>
-  )
-}
-
-export default App
+export default App;
