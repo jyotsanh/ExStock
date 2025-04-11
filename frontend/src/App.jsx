@@ -1,23 +1,15 @@
-import React from 'react'
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from './components/Navbar/navbar'
-import ChatBot from './pages/chabot/chatbot'
-// import Footer from './components/footer/footer'
+import DashboardLayout from "./pages/Dashboard/DashboardLayout"; // update path as needed
 
-function App() {
+const App = () => {
   return (
     <Router>
-     <Navbar /> 
+      <Routes>
+        <Route path="/*" element={<DashboardLayout />} />
+      </Routes>
+    </Router>
+  );
+};
 
-     <Routes>
-     {/* <Route path="/" element={<Home />} /> */}
-     <Route path="/chatbot" element={<ChatBot />} /> 
-
-     </Routes>
-
-     {/* <Footer /> */}
-     </Router>
-  )
-}
-
-export default App
+export default App;

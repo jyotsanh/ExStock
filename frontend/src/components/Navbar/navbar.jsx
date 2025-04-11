@@ -49,10 +49,10 @@ const SideNavbar = () => {
         <div className="bg-cyan-500 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg font-semibold">
           U
         </div>
-        <div>
+        <div>Q
           <p className="text-sm font-medium">User123</p>
           <p className="text-xs text-gray-300">₹125,000</p>
-        </div>
+        </div> 
       </div>
     </div>
   );
