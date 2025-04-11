@@ -7,11 +7,13 @@ const userController = {
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-      
+
       res.json({
-        id: user.id,
+        id: user.userId,
         email: user.email,
-        username: user.username
+        username: user.username,
+        premium: user.premium,
+        virtualCoins: user.virtualCoins
       });
     } catch (error) {
       console.error(error);

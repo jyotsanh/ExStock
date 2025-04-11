@@ -6,7 +6,9 @@ class User {
       userId,
       email,
       username,
-      password
+      password,
+      premium: false,              
+      virtualCoins: 10000          
     };
     users.push(user);
     return user;
@@ -28,6 +30,15 @@ class User {
     return users.find(user => 
       user.email === emailOrUsername || user.username === emailOrUsername
     );
+  }
+
+  static async addCoins(userId, amount) {
+    const user = await this.findById(userId);
+    if (!user) return null;
+    if (!user.premium) return { error: 'Only premium users can add coins' };
+
+    user.virtualCoins += amount;
+    return user;
   }
 }
 
