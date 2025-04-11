@@ -1,5 +1,5 @@
 import React from "react";
-import SideNavbar from "../../components/Navbar/navbar";
+
 import StockWebSocketViewer from "../liveMarket/market";
 import CandleChart from "../candlechar/candleChart";
 import NewsSection from "../NewsSections/NewsSections";
@@ -8,7 +8,7 @@ import CoursesSection from "../CoursesSection/CoursesSection";
 const DashboardLayout = () => {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-100 to-slate-200">
-      <SideNavbar />
+
       
       <div className="flex-1 grid grid-cols-2 gap-4 p-6 overflow-y-auto h-screen">
         {/* Middle Section */}

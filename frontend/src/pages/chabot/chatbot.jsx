@@ -61,13 +61,13 @@ const ChatBot = () => {
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700"
+          className="bg-cyan-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-700"
         >
           <MessageCircle size={24} />
         </button>
       ) : (
         <div className="w-80 h-96 bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
-          <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
+          <div className="bg-[#1e293b] text-white p-3 flex justify-between items-center">
             <span>ChatBot</span>
             <button onClick={() => setIsOpen(false)} className="text-white text-xl">×</button>
           </div>

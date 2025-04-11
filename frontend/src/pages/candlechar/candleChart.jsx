@@ -7,7 +7,7 @@ const CandleChart = () => {
 
   useEffect(() => {
     const chart = createChart(chartRef.current, {
-      width: chartRef.current.clientWidth,
+      width: chartRef.current.clientWidth || 600,
       height: 300,
       layout: { background: { color: "#ffffff" }, textColor: "#1f2937" },
       grid: {
@@ -24,16 +24,28 @@ const CandleChart = () => {
       wickDownColor: "#ef4444"
     });
 
+    const handleResize = () => {
+      chart.applyOptions({ width: chartRef.current.clientWidth });
+    };
+    window.addEventListener("resize", handleResize);
+
     const ws = new WebSocket("ws://192.168.100.88:8015/ws/chart");
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      candleSeries.setData(data);
+      if (Array.isArray(data)) {
+        candleSeries.setData(data);
+      } else {
+        candleSeries.update(data);
+      }
     };
 
-    return () => ws.close();
+    return () => {
+      ws.close();
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
-  return <div ref={chartRef} className="w-full h-full rounded-lg" />;
+  return <div ref={chartRef} className="w-full h-[300px] rounded-lg" />;
 };
 
 export default CandleChart;
