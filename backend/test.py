@@ -4,6 +4,7 @@ import unittest
 BASE_URL = "http://localhost:3000"
 AUTH_URL = f"{BASE_URL}/auth"
 USERS_URL = f"{BASE_URL}/users"
+COURSE_URL = f"{BASE_URL}/course"
 
 class TestAuthAPI(unittest.TestCase):
     def setUp(self):
@@ -55,3 +56,56 @@ class TestAuthAPI(unittest.TestCase):
         }
         login_res = requests.post(f"{AUTH_URL}/login", json=login_payload)
         self.assertEqual(login_res.status_code, 401)
+
+# ------------------ COURSE ROUTE TESTS ------------------
+
+class TestCourseAPI(unittest.TestCase):
+    def setUp(self):
+        self.course_payload = {
+            "title": "Test NEPSE Course",
+            "level": "beginner",
+            "platform": "YouTube",
+            "link": "https://youtube.com/testcourse",
+            "duration": "2 hours",
+            "instructor": "Mr. Tester",
+            "tags": ["nepse", "basics", "finance"],
+            "introduction": "This is an intro to NEPSE.",
+            "description": "Detailed course description.",
+            "references": ["https://ref1.com", "https://ref2.com"],
+            "quiz": [
+                {
+                    "question": "What is NEPSE?",
+                    "options": ["Stock Market", "Bank", "Insurance"],
+                    "answer": "Stock Market"
+                }
+            ]
+        }
+
+    def test_create_and_get_course(self):
+        # Create course
+        res = requests.post(f"{COURSE_URL}/create", json=self.course_payload)
+        self.assertEqual(res.status_code, 201)
+        course_data = res.json()
+        self.assertEqual(course_data["title"], self.course_payload["title"])
+        self.course_id = course_data["_id"]
+
+        # Get course by ID
+        res = requests.get(f"{COURSE_URL}/{self.course_id}")
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json()["title"], self.course_payload["title"])
+
+    def test_get_all_courses(self):
+        res = requests.get(f"{COURSE_URL}/")
+        self.assertEqual(res.status_code, 200)
+        self.assertIsInstance(res.json(), list)
+
+    def test_get_courses_by_level(self):
+        res = requests.get(f"{COURSE_URL}/level/beginner")
+        self.assertEqual(res.status_code, 200)
+        courses = res.json()
+        for course in courses:
+            self.assertEqual(course["level"], "beginner")
+
+
+if __name__ == "__main__":
+    unittest.main()
