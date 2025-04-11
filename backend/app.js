@@ -6,6 +6,9 @@ const courseRoutes = require('./routes/courseRoutes');
 const tradeRoutes = require('./routes/tradeRoutes')
 
 const app = express();
+const cors = require('cors');
+app.use(cors());
+
 
 // Middleware
 app.use(express.json());
