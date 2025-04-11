@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './components/Navbar/navbar'
-import Footer from './components/footer/footer'
+// import Footer from './components/footer/footer'
 
 function App() {
   return (
@@ -9,11 +9,11 @@ function App() {
      <Navbar /> 
 
      <Routes>
-     <Route path="/" element={<Home />} />
-      
+     {/* <Route path="/" element={<Home />} /> */}
+
      </Routes>
 
-     <Footer />
+     {/* <Footer /> */}
      </Router>
   )
 }
