@@ -1,9 +1,12 @@
 from Libs.libs import *
 
+load_dotenv()
+OPENAI_KEY = os.getenv("OPENAI_KEY")
+
 def get_llm(model_name:str="gpt-4o-mini",temperature=0.6):
     if model_name == "gpt-4o-mini":
         return ChatOpenAI(
-                    api_key = "45678dfghjcvbn",
+                    api_key = OPENAI_KEY,
                     model=model_name,
                     temperature=temperature
                 )
@@ -15,4 +18,6 @@ def get_llm(model_name:str="gpt-4o-mini",temperature=0.6):
         )
 
 def get_embeddings():
-    pass
+    embeddings=OpenAIEmbeddings(api_key=OPENAI_KEY )
+    return embeddings        
+

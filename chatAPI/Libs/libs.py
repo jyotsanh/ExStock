@@ -87,7 +87,6 @@ string_parser= StrOutputParser()
 json_parser = JsonOutputParser()
 
 
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # dir: models/model.py
 from models import VectorStore
 

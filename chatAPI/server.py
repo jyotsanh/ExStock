@@ -7,7 +7,7 @@ from graph.generate_response import generate_response
 # Persistent Memory
 import sqlite3
 import os
-path = "state_db/checkpoints.sqlite.db"
+path = "stateDb/checkpoints.sqlite.db"
 os.makedirs(os.path.dirname(path), exist_ok=True)  # Create the directory if it doesn't exist
 conn = sqlite3.connect(path, check_same_thread = False)
 
@@ -34,6 +34,7 @@ def update_vector_store():
 @app.get("/response")
 def chat_response(query:str,senderId:str,metadata={},source:str="web"):
     try:
+        print(f"[INFO] -> query: {query} | senderId: {senderId} | metadata: {metadata} | source: {source}")
         response = generate_response(
             user_query = query,
             user_id = senderId,
