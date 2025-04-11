@@ -1,0 +1,16 @@
+uvicorn
+langgraph
+fastapi
+langgraph-checkpoint
+langgraph-checkpoint-postgres
+langgraph-checkpoint-sqlite
+redis
+langchain-milvus
+langchain-chroma
+langchain-openai
+openpyxl
+schedule
+fuzzywuzzy
+python-Levenshtein
+langchain
+langchain_community
