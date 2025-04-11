@@ -83,3 +83,33 @@ async def websocket_endpoint(websocket: WebSocket):
             await browser.close()
         if websocket.application_state != WebSocketState.DISCONNECTED:
             await websocket.close()
+
+@app.websocket("/ws/chart")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    browser = None
+    
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True, args=["--disable-http2"])
+            context = await browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+            
+            page = await context.new_page()
+            await page.goto(NEPSE_URL, wait_until="load", timeout=50000)
+            
+            while True:
+                data = await reload_and_extract(page)
+                if data is not None:
+                    await websocket.send_json(data)
+                await asyncio.sleep(2)  # Wait interval regardless of success/failure
+    
+    except WebSocketDisconnect:
+        print("WebSocket connection closed")
+        return
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        if browser:
+            await browser.close()
+        if websocket.application_state != WebSocketState.DISCONNECTED:
+            await websocket.close()

@@ -1,3 +1,7 @@
+from Libs.libs import *
+
+from core.assistant import MyState
+
 import sqlite3
 
 def delete_thread_entries(thread_id,conn:sqlite3.Connection):
@@ -27,3 +31,23 @@ def delete_thread_entries(thread_id,conn:sqlite3.Connection):
 
     except sqlite3.Error as e:
         print(f"Error: {e}")
+
+
+
+def handle_tool_error(state) -> dict:
+    error = state.get("error")
+    tool_calls = state["messages"][-1].tool_calls
+    return {
+        "messages": [
+            ToolMessage(
+                content=f"Error: {repr(error)}\n please fix your mistakes.",
+                tool_call_id=tc["id"],
+            )
+            for tc in tool_calls
+        ]
+    }
+
+def create_tool_node_with_fallback(tools: list) -> dict:
+    return ToolNode(tools).with_fallbacks(
+        [RunnableLambda(handle_tool_error)], exception_key="error"
+    )

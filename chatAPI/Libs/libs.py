@@ -95,3 +95,8 @@ LOCAL_HOST = os.getenv("LOCAL_HOST")
 LOCAL_PORT = os.getenv("LOCAL_PORT")
 
 OPENAI_KEY = os.getenv("OPENAI_KEY")
+
+llm = get_llm(
+            model='openai',
+            temperature=0.6,
+            )
