@@ -2,34 +2,45 @@ const users = [];
 
 class User {
   static async create({ userId, email, username, password }) {
+    const now = new Date();
     const user = {
       userId,
       email,
       username,
       password,
-      premium: false,              
-      virtualCoins: 10000          
+      premium: false,
+      virtualCoins: 10000,
+      limit: 20,
+      lastLimitReset: now
     };
     users.push(user);
     return user;
   }
 
   static async findByEmail(email) {
-    return users.find(user => user.email === email);
+    const user = users.find(user => user.email === email);
+    this._resetDailyLimit(user);
+    return user;
   }
 
   static async findByUsername(username) {
-    return users.find(user => user.username === username);
+    const user = users.find(user => user.username === username);
+    this._resetDailyLimit(user);
+    return user;
   }
 
   static async findById(userId) {
-    return users.find(user => user.userId === userId);
+    const user = users.find(user => user.userId === userId);
+    this._resetDailyLimit(user);
+    return user;
   }
 
   static async findByEmailOrUsername(emailOrUsername) {
-    return users.find(user => 
+    const user = users.find(user =>
       user.email === emailOrUsername || user.username === emailOrUsername
     );
+    this._resetDailyLimit(user);
+    return user;
   }
 
   static async addCoins(userId, amount) {
@@ -39,6 +50,21 @@ class User {
 
     user.virtualCoins += amount;
     return user;
+  }
+
+  static _resetDailyLimit(user) {
+    if (!user) return;
+
+    const now = new Date();
+    const lastReset = new Date(user.lastLimitReset);
+
+    const nowDate = now.toDateString();
+    const lastResetDate = lastReset.toDateString();
+
+    if (nowDate !== lastResetDate) {
+      user.limit = 20;
+      user.lastLimitReset = now;
+    }
   }
 }
 
