@@ -107,7 +107,7 @@ const Signup = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {errors.server && <p className="text-red-500 text-center">{errors.server}</p>}
-
+        {/* errors.server when the backend server is down */}
           <div className="space-y-2">
             <label htmlFor="name" className="block text-sm font-medium text-gray-300">Full Name</label>
             <div className="relative">
@@ -121,7 +121,7 @@ const Signup = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className="block w-full pl-10 bg-[#071428] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#00FF88]"
-                placeholder="John Doe"
+                placeholder="Ram Bahadur"
               />
             </div>
             {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
