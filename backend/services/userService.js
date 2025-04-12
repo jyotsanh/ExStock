@@ -1,62 +1,55 @@
 const User = require('../models/users');
 
-class UserService {
-  static async create({ email, username, password }) {
-    const user = new User({ email, username, password });
-    await user.save();
-    return user;
-  }
+const UserService = {
+  async findByEmail(email) {
+    return await User.findOne({ email });
+  },
 
-  static async findByEmail(email) {
-    const user = await User.findOne({ email });
-    this._resetDailyLimit(user);
-    return user;
-  }
+  async findByUsername(username) {
+    return await User.findOne({ username });
+  },
 
-  static async findByUsername(username) {
-    const user = await User.findOne({ username });
-    this._resetDailyLimit(user);
-    return user;
-  }
-
-  static async findById(userId) {
-    const user = await User.findOne({ userId });
-    this._resetDailyLimit(user);
-    return user;
-  }
-
-  static async findByEmailOrUsername(identifier) {
-    const user = await User.findOne({
-      $or: [{ email: identifier }, { username: identifier }]
+  async findByEmailOrUsername(emailOrUsername) {
+    return await User.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }]
     });
-    this._resetDailyLimit(user);
-    return user;
-  }
+  },
 
-  static async addCoins(userId, amount) {
-    const user = await this.findById(userId);
-    if (!user) return null;
-    if (!user.premium) return { error: 'Only premium users can add coins' };
+  async findByUserId(userId) {
+    return await User.findOne({ userId });
+  },
 
-    user.virtualCoins += amount;
-    await user.save();
-    return user;
-  }
-
-  static async _resetDailyLimit(user) {
-    if (!user) return;
-
-    const now = new Date();
-    const lastReset = new Date(user.lastLimitReset);
-    const nowDate = now.toDateString();
-    const lastResetDate = lastReset.toDateString();
-
-    if (nowDate !== lastResetDate) {
-      user.limit = 20;
-      user.lastLimitReset = now;
-      await user.save();
+  async create(userData) {
+    console.log('\n--- START UserService.create ---');
+    console.log('Full userData object:', userData);
+    console.log('Type of userData:', typeof userData);
+    console.log('Keys in userData:', Object.keys(userData));
+    
+    if (!userData.userId) {
+      console.error(' userId is missing in userData');
+      throw new Error('userId is required');
     }
+  
+    console.log('Creating user with userId:', userData.userId);
+    
+    const user = new User({
+      userId: userData.userId,
+      email: userData.email,
+      username: userData.username,
+      password: userData.password,
+      premium: userData.premium || false,
+      balance: userData.balance || 10000,
+    });
+  
+    console.log('User object before save:', user);
+    
+    await user.save();
+    
+    console.log('User created successfully:', user);
+    console.log('--- END UserService.create ---\n');
+    
+    return user;
   }
-}
+};
 
 module.exports = UserService;
