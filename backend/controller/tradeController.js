@@ -1,4 +1,5 @@
 const Trade = require("../models/trade");
+const User = require("../models/users"); 
 
 const saveTrade = async (req, res) => {
   try {
@@ -8,9 +9,22 @@ const saveTrade = async (req, res) => {
       return res.status(400).json({ error: "All fields are required." });
     }
 
+   
+    const userExists = await User.findById(userId);
+    if (!userExists) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
     const total = price * quantity;
 
-    const trade = new Trade({ userId, symbol, action, quantity, price, total });
+    const trade = new Trade({
+      user: userId, 
+      symbol,
+      action,
+      quantity,
+      price
+    });
+
     await trade.save();
 
     res.status(201).json({ message: "Trade saved successfully.", trade });
