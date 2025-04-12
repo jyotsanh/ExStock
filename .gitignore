@@ -176,6 +176,7 @@ cython_debug/
 
 backend/node_modules
 backend/package-lock.json
+backend/python
 
 #frontend nodemodule
 frontend/nodemodule
