@@ -12,8 +12,19 @@ const userSchema = new mongoose.Schema({
   premium: { type: Boolean, default: false },
   virtualCoins: { type: Number, default: 10000 },
   limit: { type: Number, default: 20 },
-  lastLimitReset: { type: Date, default: Date.now }
+  lastLimitReset: { type: Date, default: Date.now },
+  coursesTaken: [
+    {
+      course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
+      },
+      score: Number,              
+      completedAt: Date            
+    }
+  ]
 });
+
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
