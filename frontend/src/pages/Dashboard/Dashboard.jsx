@@ -1,4 +1,4 @@
-// src/pages/Dashboard/Dashboard.jsx
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -246,10 +246,10 @@ const Dashboard = () => {
                 <DollarSignIcon size={20} className="text-[#00FF88] mr-2" />
                 <h3 className="font-medium">Virtual Trading</h3>
               </div>
-              <p className="text-sm text-gray-300 mb-3">Practice trading with $100,000 of virtual money. Test strategies without risking real capital.</p>
+              <p className="text-sm text-gray-300 mb-3">Practice trading with Rs.10,000 of virtual money. Test strategies without risking real capital.</p>
               <div className="flex justify-between text-xs">
                 <span>Portfolio Value</span>
-                <span className="font-medium">$100,000</span>
+                <span className="font-medium">Rs.10,000</span>
               </div>
             </div>
             

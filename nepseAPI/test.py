@@ -4,7 +4,7 @@ import json
 import datetime
 
 async def connect_to_stock_websocket():
-    uri = "ws://localhost:8015/ws/v2"
+    uri = "ws://192.168.100.88:8015/ws/v2"
     print(f"Attempting to connect to {uri}...")
     
     try:

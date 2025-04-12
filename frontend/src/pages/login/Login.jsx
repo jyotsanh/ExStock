@@ -6,43 +6,68 @@ import { LogInIcon, UserIcon, LockIcon, EyeIcon, EyeOffIcon } from 'lucide-react
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
+    emailOrUsername: '',
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    if (loginError) {
+      setLoginError('');
+    }
   };
-  
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Simple validation
+
     if (!formData.email || !formData.password) {
       setLoginError('Please enter both email and password');
       return;
     }
-    
-    // For demo purposes, let's simulate a successful login
-    // In a real app, you would call an API here
-    setTimeout(() => {
-      // Mock successful login
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('user', JSON.stringify({ name: 'Demo User', email: formData.email }));
-      navigate('/');
-    }, 1000);
+
+    const browserId = localStorage.getItem("browserId") || crypto.randomUUID();
+    localStorage.setItem("browserId", browserId);
+
+    const loginData = {
+      userId: browserId,
+      emailOrUsername: formData.email,
+      password: formData.password,
+    };
+
+    try {
+      const response = await fetch("http://192.168.100.81:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify(data.user || {}));
+        navigate("/");
+      } else {
+        setLoginError(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setLoginError("Network error. Please try again later.");
+    }
   };
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#071428] p-4">
       <div className="bg-[#0A1D3D] rounded-lg shadow-lg p-8 w-full max-w-md">
@@ -50,13 +75,13 @@ const Login = () => {
           <h1 className="text-2xl font-bold text-[#00FF88] mb-2">Welcome Back</h1>
           <p className="text-gray-300">Sign in to your account to continue</p>
         </div>
-        
+
         {loginError && (
           <div className="bg-red-500 bg-opacity-20 border border-red-500 text-red-300 px-4 py-3 rounded-md mb-4">
             {loginError}
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <label htmlFor="email" className="block text-sm font-medium text-gray-300">
@@ -78,7 +103,7 @@ const Login = () => {
               />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <label htmlFor="password" className="block text-sm font-medium text-gray-300">
               Password
@@ -97,7 +122,7 @@ const Login = () => {
                 className="block w-full pl-10 bg-[#071428] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#00FF88]"
                 placeholder="••••••••"
               />
-              <div 
+              <div
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                 onClick={togglePasswordVisibility}
               >
@@ -109,7 +134,7 @@ const Login = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -128,7 +153,7 @@ const Login = () => {
               </a>
             </div>
           </div>
-          
+
           <div>
             <button
               type="submit"
@@ -139,10 +164,10 @@ const Login = () => {
             </button>
           </div>
         </form>
-        
+
         <div className="mt-6 text-center">
           <p className="text-gray-300">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/signup" className="text-[#00BFFF] hover:text-[#00FF88]">
               Sign up
             </Link>
