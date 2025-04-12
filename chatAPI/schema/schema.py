@@ -21,6 +21,6 @@ from enum import Enum
 class StoreName(Enum):
     stock_genius = "stock_genius"
     ai_tutor = "ai_tutor"
-    course_seller = "ciurse_seller"
+    course_seller = "course_seller"
 
     

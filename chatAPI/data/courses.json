@@ -1,6 +1,5 @@
 {
  "course_1" :  {
-      "_id": "67f98cb5349d21baf77fd5cc",
       "title": "NEPSE for Beginners – YouTube Series",
       "level": "beginner",
       "platform": "YouTube",
@@ -17,70 +16,9 @@
       "references": [
         "https://sharesansar.com",
         "https://merolagani.com"
-      ],
-      "quiz": [
-        {
-          "question": "What is NEPSE?",
-          "options": [
-            "A trading platform",
-            "An app",
-            "A bank",
-            "A stock"
-          ],
-          "answer": "A trading platform",
-          "_id": "67f98cb5349d21baf77fd5cd"
-        },
-        {
-          "question": "What is a Demat account?",
-          "options": [
-            "Bank account",
-            "Stock account",
-            "Loan account",
-            "Savings account"
-          ],
-          "answer": "Stock account",
-          "_id": "67f98cb5349d21baf77fd5ce"
-        },
-        {
-          "question": "Who regulates NEPSE?",
-          "options": [
-            "SEBON",
-            "NRB",
-            "MoF",
-            "NIBL"
-          ],
-          "answer": "SEBON",
-          "_id": "67f98cb5349d21baf77fd5cf"
-        },
-        {
-          "question": "What is IPO?",
-          "options": [
-            "Initial Public Offering",
-            "Interest Paid Offer",
-            "Insurance Payout Offer",
-            "Investment Paid Option"
-          ],
-          "answer": "Initial Public Offering",
-          "_id": "67f98cb5349d21baf77fd5d0"
-        },
-        {
-          "question": "Which document is needed to open Demat?",
-          "options": [
-            "Citizenship",
-            "License",
-            "PAN Card",
-            "All of the above"
-          ],
-          "answer": "All of the above",
-          "_id": "67f98cb5349d21baf77fd5d1"
-        }
-      ],
-      "createdAt": "2025-04-11T21:42:13.624Z",
-      "updatedAt": "2025-04-11T21:42:13.624Z",
-      "__v": 0
+      ]
     },
    "course_2" : {
-      "_id": "67f98cc4349d21baf77fd5d3",
       "title": "Basics of Mutual Funds",
       "level": "beginner",
       "platform": "Website",
@@ -93,71 +31,10 @@
       ],
       "introduction": "Learn what mutual funds are and how they work.",
       "description": "An easy guide to investing in mutual funds in Nepal.",
-      "references": [],
-      "quiz": [
-        {
-          "question": "What is a mutual fund?",
-          "options": [
-            "Pooled investment",
-            "Loan",
-            "Bank",
-            "Insurance"
-          ],
-          "answer": "Pooled investment",
-          "_id": "67f98cc4349d21baf77fd5d4"
-        },
-        {
-          "question": "Who manages mutual funds?",
-          "options": [
-            "Fund manager",
-            "Bank",
-            "Stock investor",
-            "Government"
-          ],
-          "answer": "Fund manager",
-          "_id": "67f98cc4349d21baf77fd5d5"
-        },
-        {
-          "question": "Can you sell mutual fund units anytime?",
-          "options": [
-            "Yes",
-            "No",
-            "Sometimes",
-            "Only after 5 years"
-          ],
-          "answer": "Yes",
-          "_id": "67f98cc4349d21baf77fd5d6"
-        },
-        {
-          "question": "Which of these is a benefit?",
-          "options": [
-            "Diversification",
-            "High fees",
-            "No returns",
-            "High tax"
-          ],
-          "answer": "Diversification",
-          "_id": "67f98cc4349d21baf77fd5d7"
-        },
-        {
-          "question": "Are mutual funds risk-free?",
-          "options": [
-            "No",
-            "Yes",
-            "Always",
-            "Never"
-          ],
-          "answer": "No",
-          "_id": "67f98cc4349d21baf77fd5d8"
-        }
-      ],
-      "createdAt": "2025-04-11T21:42:28.228Z",
-      "updatedAt": "2025-04-11T21:42:28.228Z",
-      "__v": 0
+      "references": []
     },
 
    "course_3": {
-      "_id": "67f98cd2349d21baf77fd5da",
       "title": "Savings vs. Investing",
       "level": "beginner",
       "platform": "Offline",
@@ -170,70 +47,9 @@
       ],
       "introduction": "Understand the difference between saving and investing.",
       "description": "Learn when to save and when to invest money.",
-      "references": [],
-      "quiz": [
-        {
-          "question": "Which is safer?",
-          "options": [
-            "Saving",
-            "Investing",
-            "Both",
-            "None"
-          ],
-          "answer": "Saving",
-          "_id": "67f98cd2349d21baf77fd5db"
-        },
-        {
-          "question": "Which gives higher return?",
-          "options": [
-            "Investing",
-            "Saving",
-            "Both",
-            "Loaning"
-          ],
-          "answer": "Investing",
-          "_id": "67f98cd2349d21baf77fd5dc"
-        },
-        {
-          "question": "Which is riskier?",
-          "options": [
-            "Saving",
-            "Investing",
-            "Bank",
-            "Wallet"
-          ],
-          "answer": "Investing",
-          "_id": "67f98cd2349d21baf77fd5dd"
-        },
-        {
-          "question": "Is FD saving?",
-          "options": [
-            "Yes",
-            "No",
-            "Maybe",
-            "Never"
-          ],
-          "answer": "Yes",
-          "_id": "67f98cd2349d21baf77fd5de"
-        },
-        {
-          "question": "Is stock investing?",
-          "options": [
-            "Yes",
-            "No",
-            "Sometimes",
-            "Not sure"
-          ],
-          "answer": "Yes",
-          "_id": "67f98cd2349d21baf77fd5df"
-        }
-      ],
-      "createdAt": "2025-04-11T21:42:42.626Z",
-      "updatedAt": "2025-04-11T21:42:42.626Z",
-      "__v": 0
+      "references": []
     },
     "course_4":{
-      "_id": "67f98ce1349d21baf77fd5e1",
       "title": "Understanding Interest Rates",
       "level": "beginner",
       "platform": "Other",
@@ -246,70 +62,9 @@
       ],
       "introduction": "Learn how interest rates affect your money.",
       "description": "Covers simple vs compound interest, and market impact.",
-      "references": [],
-      "quiz": [
-        {
-          "question": "What is interest?",
-          "options": [
-            "Money earned",
-            "Loan",
-            "Tax",
-            "None"
-          ],
-          "answer": "Money earned",
-          "_id": "67f98ce1349d21baf77fd5e2"
-        },
-        {
-          "question": "What is compound interest?",
-          "options": [
-            "Interest on interest",
-            "One-time interest",
-            "Tax",
-            "Fee"
-          ],
-          "answer": "Interest on interest",
-          "_id": "67f98ce1349d21baf77fd5e3"
-        },
-        {
-          "question": "Higher interest is better for?",
-          "options": [
-            "Savings",
-            "Loans",
-            "Fees",
-            "Credit card"
-          ],
-          "answer": "Savings",
-          "_id": "67f98ce1349d21baf77fd5e4"
-        },
-        {
-          "question": "Lower interest is better for?",
-          "options": [
-            "Loans",
-            "Savings",
-            "Tax",
-            "Debt"
-          ],
-          "answer": "Loans",
-          "_id": "67f98ce1349d21baf77fd5e5"
-        },
-        {
-          "question": "What affects interest rates?",
-          "options": [
-            "Inflation",
-            "Weather",
-            "TV",
-            "Politics"
-          ],
-          "answer": "Inflation",
-          "_id": "67f98ce1349d21baf77fd5e6"
-        }
-      ],
-      "createdAt": "2025-04-11T21:42:57.554Z",
-      "updatedAt": "2025-04-11T21:42:57.554Z",
-      "__v": 0
+      "references": []
     },
     "course_5":{
-      "_id": "67f98cf2349d21baf77fd5e8",
       "title": "Technical Analysis Basics",
       "level": "intermediate",
       "platform": "YouTube",
@@ -322,70 +77,9 @@
       ],
       "introduction": "Learn how to read stock charts and trends.",
       "description": "Support, resistance, indicators and more.",
-      "references": [],
-      "quiz": [
-        {
-          "question": "What is a candlestick?",
-          "options": [
-            "Chart pattern",
-            "Stock",
-            "Account",
-            "Deposit"
-          ],
-          "answer": "Chart pattern",
-          "_id": "67f98cf2349d21baf77fd5e9"
-        },
-        {
-          "question": "What does RSI indicate?",
-          "options": [
-            "Momentum",
-            "Volume",
-            "Earnings",
-            "Interest"
-          ],
-          "answer": "Momentum",
-          "_id": "67f98cf2349d21baf77fd5ea"
-        },
-        {
-          "question": "What is resistance?",
-          "options": [
-            "Upper price barrier",
-            "Loan",
-            "Volume",
-            "Stock type"
-          ],
-          "answer": "Upper price barrier",
-          "_id": "67f98cf2349d21baf77fd5eb"
-        },
-        {
-          "question": "What is support?",
-          "options": [
-            "Lower price barrier",
-            "Profit",
-            "Bank",
-            "Fee"
-          ],
-          "answer": "Lower price barrier",
-          "_id": "67f98cf2349d21baf77fd5ec"
-        },
-        {
-          "question": "Which is a moving average?",
-          "options": [
-            "50-day",
-            "5-min",
-            "Loan",
-            "Tax"
-          ],
-          "answer": "50-day",
-          "_id": "67f98cf2349d21baf77fd5ed"
-        }
-      ],
-      "createdAt": "2025-04-11T21:43:14.462Z",
-      "updatedAt": "2025-04-11T21:43:14.462Z",
-      "__v": 0
+      "references": []
     },
     "course_6":{
-      "_id": "67f98d01349d21baf77fd5ef",
       "title": "Fundamental Analysis",
       "level": "intermediate",
       "platform": "Website",
@@ -398,70 +92,9 @@
       ],
       "introduction": "Analyze companies for long-term investment.",
       "description": "Learn ratios, balance sheets, and earnings.",
-      "references": [],
-      "quiz": [
-        {
-          "question": "What is EPS?",
-          "options": [
-            "Earnings Per Share",
-            "Equity",
-            "Profit",
-            "Stock"
-          ],
-          "answer": "Earnings Per Share",
-          "_id": "67f98d01349d21baf77fd5f0"
-        },
-        {
-          "question": "What does P/E mean?",
-          "options": [
-            "Price/Earnings",
-            "Price/Estate",
-            "Profit/Expense",
-            "Purchase/Equity"
-          ],
-          "answer": "Price/Earnings",
-          "_id": "67f98d01349d21baf77fd5f1"
-        },
-        {
-          "question": "What is ROE?",
-          "options": [
-            "Return on Equity",
-            "Revenue on Earning",
-            "Rate of Equity",
-            "None"
-          ],
-          "answer": "Return on Equity",
-          "_id": "67f98d01349d21baf77fd5f2"
-        },
-        {
-          "question": "Higher ROE is?",
-          "options": [
-            "Better",
-            "Worse",
-            "Risky",
-            "Same"
-          ],
-          "answer": "Better",
-          "_id": "67f98d01349d21baf77fd5f3"
-        },
-        {
-          "question": "What is debt ratio?",
-          "options": [
-            "Debt/Asset",
-            "Asset/Debt",
-            "Income/Debt",
-            "Expense/Income"
-          ],
-          "answer": "Debt/Asset",
-          "_id": "67f98d01349d21baf77fd5f4"
-        }
-      ],
-      "createdAt": "2025-04-11T21:43:29.008Z",
-      "updatedAt": "2025-04-11T21:43:29.008Z",
-      "__v": 0
-    },
+      "references": []
+          },
     "course_7":{
-      "_id": "67f98d0e349d21baf77fd5f6",
       "title": "Trading Psychology",
       "level": "intermediate",
       "platform": "Offline",
@@ -474,70 +107,9 @@
       ],
       "introduction": "Master emotions while trading.",
       "description": "Fear, greed, discipline and focus.",
-      "references": [],
-      "quiz": [
-        {
-          "question": "Which emotion affects traders most?",
-          "options": [
-            "Fear",
-            "Joy",
-            "Love",
-            "Calm"
-          ],
-          "answer": "Fear",
-          "_id": "67f98d0e349d21baf77fd5f7"
-        },
-        {
-          "question": "What is FOMO?",
-          "options": [
-            "Fear of Missing Out",
-            "Finance of Market Options",
-            "Fast Order Management",
-            "None"
-          ],
-          "answer": "Fear of Missing Out",
-          "_id": "67f98d0e349d21baf77fd5f8"
-        },
-        {
-          "question": "What helps control emotions?",
-          "options": [
-            "Discipline",
-            "Anger",
-            "Panic",
-            "Excitement"
-          ],
-          "answer": "Discipline",
-          "_id": "67f98d0e349d21baf77fd5f9"
-        },
-        {
-          "question": "Should you follow herd?",
-          "options": [
-            "No",
-            "Yes",
-            "Always",
-            "Maybe"
-          ],
-          "answer": "No",
-          "_id": "67f98d0e349d21baf77fd5fa"
-        },
-        {
-          "question": "What leads to overtrading?",
-          "options": [
-            "Greed",
-            "Sleep",
-            "Savings",
-            "Knowledge"
-          ],
-          "answer": "Greed",
-          "_id": "67f98d0e349d21baf77fd5fb"
-        }
-      ],
-      "createdAt": "2025-04-11T21:43:42.803Z",
-      "updatedAt": "2025-04-11T21:43:42.803Z",
-      "__v": 0
+      "references": []
     },
     "course_8":{
-      "_id": "67f98d1c349d21baf77fd5fd",
       "title": "Portfolio Building",
       "level": "intermediate",
       "platform": "Other",
@@ -550,70 +122,9 @@
       ],
       "introduction": "Create a solid diversified portfolio.",
       "description": "Stocks, mutual funds, fixed income assets.",
-      "references": [],
-      "quiz": [
-        {
-          "question": "What is a portfolio?",
-          "options": [
-            "Collection of investments",
-            "Bank",
-            "Loan",
-            "Chart"
-          ],
-          "answer": "Collection of investments",
-          "_id": "67f98d1c349d21baf77fd5fe"
-        },
-        {
-          "question": "What helps reduce risk?",
-          "options": [
-            "Diversification",
-            "Concentration",
-            "Debt",
-            "IPO"
-          ],
-          "answer": "Diversification",
-          "_id": "67f98d1c349d21baf77fd5ff"
-        },
-        {
-          "question": "Which is a safe asset?",
-          "options": [
-            "Government bonds",
-            "Crypto",
-            "Stocks",
-            "Derivatives"
-          ],
-          "answer": "Government bonds",
-          "_id": "67f98d1c349d21baf77fd600"
-        },
-        {
-          "question": "What is asset allocation?",
-          "options": [
-            "Distribution of assets",
-            "Buying stocks",
-            "Saving",
-            "Interest rates"
-          ],
-          "answer": "Distribution of assets",
-          "_id": "67f98d1c349d21baf77fd601"
-        },
-        {
-          "question": "Which is a risky asset?",
-          "options": [
-            "Crypto",
-            "FD",
-            "Gold",
-            "Savings"
-          ],
-          "answer": "Crypto",
-          "_id": "67f98d1c349d21baf77fd602"
-        }
-      ],
-      "createdAt": "2025-04-11T21:43:56.567Z",
-      "updatedAt": "2025-04-11T21:43:56.567Z",
-      "__v": 0
+      "references": []
     },
     "course_9":{
-      "_id": "67f98d63349d21baf77fd604",
       "title": "Advanced Technical Analysis",
       "level": "advanced",
       "platform": "YouTube",
@@ -630,70 +141,9 @@
       "references": [
         "https://www.investopedia.com/",
         "https://tradingview.com/"
-      ],
-      "quiz": [
-        {
-          "question": "What is the RSI used for?",
-          "options": [
-            "Measure volume",
-            "Identify momentum",
-            "Track news",
-            "Calculate risk"
-          ],
-          "answer": "Identify momentum",
-          "_id": "67f98d63349d21baf77fd605"
-        },
-        {
-          "question": "Which pattern indicates a reversal?",
-          "options": [
-            "Triangle",
-            "Double Top",
-            "Rectangle",
-            "Flag"
-          ],
-          "answer": "Double Top",
-          "_id": "67f98d63349d21baf77fd606"
-        },
-        {
-          "question": "Fibonacci retracement is based on which number sequence?",
-          "options": [
-            "Lucas",
-            "Golden",
-            "Prime",
-            "None"
-          ],
-          "answer": "Golden",
-          "_id": "67f98d63349d21baf77fd607"
-        },
-        {
-          "question": "Which indicator is lagging?",
-          "options": [
-            "MACD",
-            "RSI",
-            "Stochastic",
-            "Moving Average"
-          ],
-          "answer": "Moving Average",
-          "_id": "67f98d63349d21baf77fd608"
-        },
-        {
-          "question": "Which timeframe is best for swing trading?",
-          "options": [
-            "1 min",
-            "5 min",
-            "Daily",
-            "Monthly"
-          ],
-          "answer": "Daily",
-          "_id": "67f98d63349d21baf77fd609"
-        }
-      ],
-      "createdAt": "2025-04-11T21:45:07.933Z",
-      "updatedAt": "2025-04-11T21:45:07.933Z",
-      "__v": 0
+      ]
     },
     "course_10":{
-      "_id": "67f98d71349d21baf77fd60b",
       "title": "Risk Management Strategies",
       "level": "advanced",
       "platform": "Website",
@@ -710,70 +160,9 @@
       "references": [
         "https://babypips.com/",
         "https://www.coursera.org/"
-      ],
-      "quiz": [
-        {
-          "question": "What does a stop-loss do?",
-          "options": [
-            "Increases gain",
-            "Limits loss",
-            "Tracks profit",
-            "None"
-          ],
-          "answer": "Limits loss",
-          "_id": "67f98d71349d21baf77fd60c"
-        },
-        {
-          "question": "Risk to reward ratio of 1:3 means?",
-          "options": [
-            "1 loss, 3 wins",
-            "Risk 1 to gain 3",
-            "Gain 1, risk 3",
-            "None"
-          ],
-          "answer": "Risk 1 to gain 3",
-          "_id": "67f98d71349d21baf77fd60d"
-        },
-        {
-          "question": "What's ideal portfolio risk per trade?",
-          "options": [
-            "5%",
-            "10%",
-            "1-2%",
-            "20%"
-          ],
-          "answer": "1-2%",
-          "_id": "67f98d71349d21baf77fd60e"
-        },
-        {
-          "question": "Hedging is used to?",
-          "options": [
-            "Maximize return",
-            "Eliminate risk",
-            "Reduce risk",
-            "Avoid trading"
-          ],
-          "answer": "Reduce risk",
-          "_id": "67f98d71349d21baf77fd60f"
-        },
-        {
-          "question": "Which asset reduces risk via diversification?",
-          "options": [
-            "Same industry stock",
-            "Crypto only",
-            "Bonds",
-            "All tech stocks"
-          ],
-          "answer": "Bonds",
-          "_id": "67f98d71349d21baf77fd610"
-        }
-      ],
-      "createdAt": "2025-04-11T21:45:21.123Z",
-      "updatedAt": "2025-04-11T21:45:21.123Z",
-      "__v": 0
+      ]
     },
     "course_11":{
-      "_id": "67f98d7d349d21baf77fd612",
       "title": "Algorithmic Trading with Python",
       "level": "advanced",
       "platform": "YouTube",
@@ -790,70 +179,9 @@
       "references": [
         "https://pypi.org/",
         "https://alpaca.markets/"
-      ],
-      "quiz": [
-        {
-          "question": "Which library is used for numerical computing?",
-          "options": [
-            "Pandas",
-            "NumPy",
-            "Seaborn",
-            "Tkinter"
-          ],
-          "answer": "NumPy",
-          "_id": "67f98d7d349d21baf77fd613"
-        },
-        {
-          "question": "What does backtesting evaluate?",
-          "options": [
-            "Live trades",
-            "Past strategy performance",
-            "Predictions",
-            "News"
-          ],
-          "answer": "Past strategy performance",
-          "_id": "67f98d7d349d21baf77fd614"
-        },
-        {
-          "question": "Which API is commonly used in trading?",
-          "options": [
-            "Google API",
-            "Twitter API",
-            "Alpaca",
-            "Firebase"
-          ],
-          "answer": "Alpaca",
-          "_id": "67f98d7d349d21baf77fd615"
-        },
-        {
-          "question": "Which is NOT used in data analysis?",
-          "options": [
-            "Pandas",
-            "NumPy",
-            "OpenCV",
-            "Matplotlib"
-          ],
-          "answer": "OpenCV",
-          "_id": "67f98d7d349d21baf77fd616"
-        },
-        {
-          "question": "What is the first step in building a bot?",
-          "options": [
-            "Connect exchange",
-            "Test logic",
-            "Plan strategy",
-            "Buy stocks"
-          ],
-          "answer": "Plan strategy",
-          "_id": "67f98d7d349d21baf77fd617"
-        }
-      ],
-      "createdAt": "2025-04-11T21:45:33.691Z",
-      "updatedAt": "2025-04-11T21:45:33.691Z",
-      "__v": 0
+      ]
     },
     "course_12":{
-      "_id": "67f98d8f349d21baf77fd619",
       "title": "Market Sentiment Analysis",
       "level": "advanced",
       "platform": "Website",
@@ -870,70 +198,9 @@
       "references": [
         "https://finviz.com/",
         "https://reddit.com/r/stocks/"
-      ],
-      "quiz": [
-        {
-          "question": "Which tool analyzes market sentiment?",
-          "options": [
-            "TradingView",
-            "Finviz",
-            "Photoshop",
-            "VS Code"
-          ],
-          "answer": "Finviz",
-          "_id": "67f98d8f349d21baf77fd61a"
-        },
-        {
-          "question": "What does bullish mean?",
-          "options": [
-            "Expect fall",
-            "Neutral",
-            "Expect rise",
-            "Sell position"
-          ],
-          "answer": "Expect rise",
-          "_id": "67f98d8f349d21baf77fd61b"
-        },
-        {
-          "question": "What drives fear in market?",
-          "options": [
-            "Good earnings",
-            "Low inflation",
-            "High volatility",
-            "Bull market"
-          ],
-          "answer": "High volatility",
-          "_id": "67f98d8f349d21baf77fd61c"
-        },
-        {
-          "question": "Which index tracks market fear?",
-          "options": [
-            "DOW",
-            "NASDAQ",
-            "VIX",
-            "S&P"
-          ],
-          "answer": "VIX",
-          "_id": "67f98d8f349d21baf77fd61d"
-        },
-        {
-          "question": "Which data is unstructured?",
-          "options": [
-            "CSV file",
-            "SQL data",
-            "News headlines",
-            "Excel sheet"
-          ],
-          "answer": "News headlines",
-          "_id": "67f98d8f349d21baf77fd61e"
-        }
-      ],
-      "createdAt": "2025-04-11T21:45:51.747Z",
-      "updatedAt": "2025-04-11T21:45:51.747Z",
-      "__v": 0
+      ]
     },
     "course_13":{
-      "_id": "67f98d9c349d21baf77fd620",
       "title": "Quantitative Trading Models",
       "level": "expert",
       "platform": "Website",
@@ -950,70 +217,9 @@
       "references": [
         "https://kaggle.com/",
         "https://quandl.com/"
-      ],
-      "quiz": [
-        {
-          "question": "Quant trading is based on?",
-          "options": [
-            "Guesswork",
-            "Data",
-            "News",
-            "Rumors"
-          ],
-          "answer": "Data",
-          "_id": "67f98d9c349d21baf77fd621"
-        },
-        {
-          "question": "Which regression is used in quant models?",
-          "options": [
-            "Linear",
-            "Logistic",
-            "Polynomial",
-            "All of the above"
-          ],
-          "answer": "All of the above",
-          "_id": "67f98d9c349d21baf77fd622"
-        },
-        {
-          "question": "What is overfitting?",
-          "options": [
-            "Perfect model",
-            "Underperforming",
-            "Too complex",
-            "None"
-          ],
-          "answer": "Too complex",
-          "_id": "67f98d9c349d21baf77fd623"
-        },
-        {
-          "question": "Which metric measures prediction error?",
-          "options": [
-            "F1-score",
-            "MAE",
-            "Accuracy",
-            "Recall"
-          ],
-          "answer": "MAE",
-          "_id": "67f98d9c349d21baf77fd624"
-        },
-        {
-          "question": "Which library is NOT used in ML?",
-          "options": [
-            "TensorFlow",
-            "Scikit-learn",
-            "Django",
-            "PyTorch"
-          ],
-          "answer": "Django",
-          "_id": "67f98d9c349d21baf77fd625"
-        }
-      ],
-      "createdAt": "2025-04-11T21:46:04.521Z",
-      "updatedAt": "2025-04-11T21:46:04.521Z",
-      "__v": 0
+      ]
     },
     "course_14":{
-      "_id": "67f98da8349d21baf77fd627",
       "title": "Portfolio Optimization Strategies",
       "level": "expert",
       "platform": "Offline",
@@ -1030,70 +236,9 @@
       "references": [
         "https://morningstar.com/",
         "https://cfainstitute.org/"
-      ],
-      "quiz": [
-        {
-          "question": "What does Sharpe Ratio measure?",
-          "options": [
-            "Profit",
-            "Risk",
-            "Risk-adjusted return",
-            "Fees"
-          ],
-          "answer": "Risk-adjusted return",
-          "_id": "67f98da8349d21baf77fd628"
-        },
-        {
-          "question": "Efficient frontier shows?",
-          "options": [
-            "Random stocks",
-            "Optimal portfolios",
-            "Worst returns",
-            "Tax report"
-          ],
-          "answer": "Optimal portfolios",
-          "_id": "67f98da8349d21baf77fd629"
-        },
-        {
-          "question": "Diversification helps in?",
-          "options": [
-            "Max gain",
-            "Max loss",
-            "Risk reduction",
-            "No effect"
-          ],
-          "answer": "Risk reduction",
-          "_id": "67f98da8349d21baf77fd62a"
-        },
-        {
-          "question": "Which is a defensive stock?",
-          "options": [
-            "Tech",
-            "Luxury",
-            "Pharma",
-            "Crypto"
-          ],
-          "answer": "Pharma",
-          "_id": "67f98da8349d21baf77fd62b"
-        },
-        {
-          "question": "Alpha indicates?",
-          "options": [
-            "Risk",
-            "Performance over benchmark",
-            "Beta ratio",
-            "None"
-          ],
-          "answer": "Performance over benchmark",
-          "_id": "67f98da8349d21baf77fd62c"
-        }
-      ],
-      "createdAt": "2025-04-11T21:46:16.412Z",
-      "updatedAt": "2025-04-11T21:46:16.412Z",
-      "__v": 0
+      ]
     },
     "course_15":{
-      "_id": "67f98dc0349d21baf77fd62e",
       "title": "Global Markets and Interconnectivity",
       "level": "expert",
       "platform": "Other",
@@ -1110,70 +255,9 @@
       "references": [
         "https://bloomberg.com/",
         "https://imf.org/"
-      ],
-      "quiz": [
-        {
-          "question": "Which currency affects global markets?",
-          "options": [
-            "Yen",
-            "Rupee",
-            "Dollar",
-            "Won"
-          ],
-          "answer": "Dollar",
-          "_id": "67f98dc0349d21baf77fd62f"
-        },
-        {
-          "question": "What is a trade deficit?",
-          "options": [
-            "Export \u003E Import",
-            "Import \u003E Export",
-            "Balanced trade",
-            "None"
-          ],
-          "answer": "Import \u003E Export",
-          "_id": "67f98dc0349d21baf77fd630"
-        },
-        {
-          "question": "Global crises affect which market most?",
-          "options": [
-            "Bonds",
-            "Gold",
-            "Equities",
-            "Real estate"
-          ],
-          "answer": "Equities",
-          "_id": "67f98dc0349d21baf77fd631"
-        },
-        {
-          "question": "Which is a safe haven?",
-          "options": [
-            "Crypto",
-            "Tech stock",
-            "Gold",
-            "Luxury goods"
-          ],
-          "answer": "Gold",
-          "_id": "67f98dc0349d21baf77fd632"
-        },
-        {
-          "question": "Which country is in G7?",
-          "options": [
-            "India",
-            "China",
-            "Germany",
-            "Brazil"
-          ],
-          "answer": "Germany",
-          "_id": "67f98dc0349d21baf77fd633"
-        }
-      ],
-      "createdAt": "2025-04-11T21:46:40.719Z",
-      "updatedAt": "2025-04-11T21:46:40.719Z",
-      "__v": 0
+      ]
     },
     "course_16":{
-      "_id": "67f98dcc349d21baf77fd635",
       "title": "Behavioral Finance Mastery",
       "level": "expert",
       "platform": "YouTube",
@@ -1190,66 +274,12 @@
       "references": [
         "https://psychologytoday.com/",
         "https://hbr.org/"
-      ],
-      "quiz": [
-        {
-          "question": "What is overconfidence bias?",
-          "options": [
-            "Lack of confidence",
-            "Too cautious",
-            "Excessive belief in own ability",
-            "Fear of trading"
-          ],
-          "answer": "Excessive belief in own ability",
-          "_id": "67f98dcc349d21baf77fd636"
-        },
-        {
-          "question": "Anchoring is?",
-          "options": [
-            "Floating idea",
-            "Fixed reference point",
-            "Relying on news",
-            "Emotional decision"
-          ],
-          "answer": "Fixed reference point",
-          "_id": "67f98dcc349d21baf77fd637"
-        },
-        {
-          "question": "Herd behavior refers to?",
-          "options": [
-            "Contrarian moves",
-            "Following majority",
-            "Solo investing",
-            "Technical trading"
-          ],
-          "answer": "Following majority",
-          "_id": "67f98dcc349d21baf77fd638"
-        },
-        {
-          "question": "Loss aversion means?",
-          "options": [
-            "Hating profits",
-            "Avoiding losses more than gaining",
-            "Chasing loss",
-            "Accepting defeat"
-          ],
-          "answer": "Avoiding losses more than gaining",
-          "_id": "67f98dcc349d21baf77fd639"
-        },
-        {
-          "question": "Which behavior causes selling too early?",
-          "options": [
-            "Fear",
-            "Greed",
-            "Optimism",
-            "Panic"
-          ],
-          "answer": "Fear",
-          "_id": "67f98dcc349d21baf77fd63a"
-        }
-      ],
-      "createdAt": "2025-04-11T21:46:52.565Z",
-      "updatedAt": "2025-04-11T21:46:52.565Z",
-      "__v": 0
+      ]
+    },
+    "stock market courses":{
+        "beginner":["Intro to NEPSE and stock market basics","Basics of Mutual Funds","avings vs. Investing","Understanding Interest Rates"],
+        "intermediate":["Analyze companies for long-term investment.","Learn how to read stock charts and trends.","Master emotions while trading.","Create a solid diversified portfolio."],
+        "expert":["Build data-driven strategies with quant models.","Design diversified portfolios using advanced techniques.","Understand how global events impact local markets.","Explore cognitive biases in investing."],
+        "advance":["Use news and public data to gauge market psychology.","Build automated trading bots using Python.","Master capital preservation and money management techniques.","Learn deep technical patterns, oscillators, and trend analysis."]
     }
 }

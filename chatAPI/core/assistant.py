@@ -118,13 +118,13 @@ class ToCourseSuggestMaster(BaseModel):
     )
 
 class ToStockGeniusMaster(BaseModel):
-    """Transfers work to a specialized assistant to Stock Genius, When customer-queries are related asking for some technique, patterns to learn."""
+    """Transfers work to a specialized assistant to which knows all the stock terminology, patterns and trends, related to stock market."""
     reason: str = Field(
         description="this request can be handle by this assistant"
     )
 
 class ToPersonalizedTutorMaster(BaseModel):
-    """Transfers work to a specialized assistant to When customer-queries are related asking for some topics from course content."""
+    """Transfers work to a specialized assistant to When customer-queries are related asking for some topics from course our exopy content."""
     reason: str = Field(
         description="this request can be handle by this assistant"
     )

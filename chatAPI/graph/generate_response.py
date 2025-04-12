@@ -11,7 +11,9 @@ def generate_response(
         sqlite_conn:sqlite3.Connection,
     ):
     try:
-        print("ghjk")
+        if user_query == "restart":
+            delete_thread_entries(user_id,sqlite_conn)
+            return "Hi, there, How may I help you today?"
         config = {
             "configurable":{
                 "thread_id":user_id,
