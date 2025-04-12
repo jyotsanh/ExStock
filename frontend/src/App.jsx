@@ -8,6 +8,7 @@ import LearningModules from './pages/LearningModules/LearningModules';
 import Login from './pages/login/login';
 import Signup from './pages/signup/Signup';
 import NotFound from './pages/NotFound';
+import Candle from './pages/candlechar/candleChart';
 
 
 const ProtectedRoute = ({ children }) => {
@@ -35,6 +36,7 @@ const App = () => {
         
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
+          
           <Route path="virtual-trading" element={
             <ProtectedRoute><VirtualTrading /></ProtectedRoute>
           } />
@@ -43,6 +45,7 @@ const App = () => {
           } />
         </Route>
         <Route path="*" element={<NotFound />} />
+        <Route path='/candle' element={<Candle />} />
       </Routes>
     </Router>
   );

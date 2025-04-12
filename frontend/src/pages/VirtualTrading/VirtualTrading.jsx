@@ -1,11 +1,12 @@
-// src/pages/VirtualTrading/VirtualTrading.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SearchIcon, TrendingUpIcon, TrendingDownIcon, RefreshCwIcon } from 'lucide-react';
 
 const VirtualTrading = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('buy');
+  const [holdings, setHoldings] = useState([]); // This is where we'll store the live holdings
+  const ws = useRef(null);
 
   // Mock data for demonstration
   const mockStockData = {
@@ -15,12 +16,6 @@ const VirtualTrading = () => {
     change: 2.75,
     changePercent: 1.47,
   };
-
-  const mockHoldings = [
-    { symbol: 'AAPL', name: 'Apple Inc.', quantity: 10, avgPrice: 175.50, currentPrice: 189.50, pl: 14.00, plPercent: 8.0 },
-    { symbol: 'MSFT', name: 'Microsoft', quantity: 5, avgPrice: 320.25, currentPrice: 335.75, pl: 15.50, plPercent: 4.8 },
-    { symbol: 'GOOGL', name: 'Alphabet', quantity: 8, avgPrice: 140.80, currentPrice: 135.90, pl: -4.90, plPercent: -3.5 },
-  ];
 
   const mockTransactions = [
     { id: 1, timestamp: '2023-05-12 14:30', action: 'BUY', symbol: 'AAPL', price: 175.50, quantity: 10 },
@@ -36,14 +31,54 @@ const VirtualTrading = () => {
     { rank: 5, username: 'bullRun', value: 21090.15, returnPercent: 5.5 },
   ];
 
+  useEffect(() => {
+    ws.current = new WebSocket('ws://192.168.100.88:8015/ws/stock');
+
+    ws.current.onopen = () => {
+      console.log('WebSocket connected');
+    };
+
+    ws.current.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (Array.isArray(data)) {
+          // Process the data and update holdings
+          const updatedHoldings = data.map((stock) => {
+            return {
+              symbol: stock.symbol,
+              name: stock.name || 'N/A',
+              quantity: stock.total_traded_quantity,
+              avgPrice: parseFloat(stock.close_price || 0),
+              currentPrice: parseFloat(stock.ltp || 0),
+              pl: (parseFloat(stock.ltp) - parseFloat(stock.close_price)) * stock.total_traded_quantity,
+              plPercent: stock.close_price ? ((parseFloat(stock.ltp) - parseFloat(stock.close_price)) / parseFloat(stock.close_price)) * 100 : 0,
+            };
+          });
+          setHoldings(updatedHoldings); // Update holdings with all 20 data
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+
+    ws.current.onerror = (err) => {
+      console.error('WebSocket error:', err);
+    };
+
+    ws.current.onclose = () => {
+      console.log('WebSocket disconnected');
+    };
+
+    return () => {
+      if (ws.current) ws.current.close();
+    };
+  }, []);
+
   return (
     <div className="flex flex-col h-full">
       <h1 className="text-2xl font-bold mb-6">Virtual Trading</h1>
-      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-        {/* Left Panel */}
         <div className="flex flex-col space-y-6">
-          {/* Search Bar */}
           <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
             <div className="relative">
               <input
@@ -56,8 +91,7 @@ const VirtualTrading = () => {
               <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={18} />
             </div>
           </div>
-          
-          {/* Stock Info */}
+
           <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
             <div className="flex justify-between items-center mb-4">
               <div>
@@ -74,32 +108,22 @@ const VirtualTrading = () => {
                 </div>
               </div>
             </div>
-            
-            {/* Buy/Sell Tabs */}
+
             <div className="flex mb-4">
               <button
-                className={`flex-1 py-2 text-center border-b-2 ${
-                  activeTab === 'buy'
-                    ? 'border-[#00FF88] text-[#00FF88]'
-                    : 'border-gray-700 text-gray-400 hover:text-white'
-                }`}
+                className={`flex-1 py-2 text-center border-b-2 ${activeTab === 'buy' ? 'border-[#00FF88] text-[#00FF88]' : 'border-gray-700 text-gray-400 hover:text-white'}`}
                 onClick={() => setActiveTab('buy')}
               >
                 Buy
               </button>
               <button
-                className={`flex-1 py-2 text-center border-b-2 ${
-                  activeTab === 'sell'
-                    ? 'border-red-500 text-red-500'
-                    : 'border-gray-700 text-gray-400 hover:text-white'
-                }`}
+                className={`flex-1 py-2 text-center border-b-2 ${activeTab === 'sell' ? 'border-red-500 text-red-500' : 'border-gray-700 text-gray-400 hover:text-white'}`}
                 onClick={() => setActiveTab('sell')}
               >
                 Sell
               </button>
             </div>
-            
-            {/* Buy/Sell Form */}
+
             <div className="mb-4">
               <label className="block text-gray-300 mb-2">Quantity</label>
               <input
@@ -110,29 +134,23 @@ const VirtualTrading = () => {
                 className="w-full bg-[#0A1D3D] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#00FF88]"
               />
             </div>
-            
+
             <div className="mb-4">
               <label className="block text-gray-300 mb-2">Total Cost</label>
               <div className="w-full bg-[#0A1D3D] border border-gray-700 rounded-lg px-4 py-2 text-white">
                 ${(mockStockData.price * quantity).toFixed(2)}
               </div>
             </div>
-            
+
             <button
-              className={`w-full py-3 rounded-lg font-medium text-[#0A1D3D] ${
-                activeTab === 'buy'
-                  ? 'bg-[#00FF88] hover:bg-[#00E07B]'
-                  : 'bg-red-500 hover:bg-red-600'
-              }`}
+              className={`w-full py-3 rounded-lg font-medium text-[#0A1D3D] ${activeTab === 'buy' ? 'bg-[#00FF88] hover:bg-[#00E07B]' : 'bg-red-500 hover:bg-red-600'}`}
             >
               {activeTab === 'buy' ? 'Buy' : 'Sell'} {mockStockData.symbol}
             </button>
           </div>
         </div>
-        
-        {/* Right Panel */}
+
         <div className="flex flex-col space-y-6">
-          {/* Holdings */}
           <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium">Your Holdings</h2>
@@ -141,8 +159,7 @@ const VirtualTrading = () => {
                 Refresh
               </button>
             </div>
-            
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-48 overflow-y-scroll">
               <table className="w-full">
                 <thead>
                   <tr className="text-gray-400 border-b border-gray-700">
@@ -154,17 +171,17 @@ const VirtualTrading = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockHoldings.map((holding, index) => (
+                  {holdings.map((holding, index) => (
                     <tr key={index} className="border-b border-gray-700">
                       <td className="py-3">
                         <div className="font-medium">{holding.symbol}</div>
                         <div className="text-xs text-gray-400">{holding.name}</div>
                       </td>
                       <td className="py-3 text-right">{holding.quantity}</td>
-                      <td className="py-3 text-right">${holding.avgPrice.toFixed(2)}</td>
-                      <td className="py-3 text-right">${holding.currentPrice.toFixed(2)}</td>
+                      <td className="py-3 text-right">${holding.avgPrice?.toFixed(2) ?? '0.00'}</td>
+                      <td className="py-3 text-right">${holding.currentPrice?.toFixed(2) ?? '0.00'}</td>
                       <td className={`py-3 text-right ${holding.pl >= 0 ? 'text-[#00FF88]' : 'text-red-500'}`}>
-                        ${Math.abs(holding.pl).toFixed(2)} ({Math.abs(holding.plPercent).toFixed(1)}%)
+                        ${Math.abs(holding.pl)?.toFixed(2) ?? '0.00'} ({Math.abs(holding.plPercent)?.toFixed(1) ?? '0.0'}%)
                       </td>
                     </tr>
                   ))}
@@ -172,8 +189,7 @@ const VirtualTrading = () => {
               </table>
             </div>
           </div>
-          
-          {/* Transaction History */}
+
           <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
             <h2 className="text-lg font-medium mb-4">Transaction History</h2>
             <div className="overflow-y-auto max-h-48">
@@ -203,29 +219,30 @@ const VirtualTrading = () => {
               </table>
             </div>
           </div>
-          
-          {/* Leaderboard */}
+
           <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
-            <h2 className="text-lg font-medium mb-4">Leaderboard</h2>
-            <div className="space-y-3">
-              {mockLeaderboard.map((user) => (
-                <div key={user.rank} className="flex items-center justify-between border-b border-gray-700 pb-2">
-                  <div className="flex items-center">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
-                      user.rank === 1 ? 'bg-yellow-500' : 
-                      user.rank === 2 ? 'bg-gray-400' : 
-                      user.rank === 3 ? 'bg-amber-700' : 'bg-gray-700'
-                    }`}>
-                      {user.rank}
-                    </div>
-                    <span className="font-medium">{user.username}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-medium">${user.value.toLocaleString()}</div>
-                    <div className="text-xs text-[#00FF88]">+{user.returnPercent}%</div>
-                  </div>
-                </div>
-              ))}
+            <h2 className="text-lg font-medium">Leaderboard</h2>
+            <div className="overflow-y-auto max-h-48">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-gray-400 border-b border-gray-700">
+                    <th className="pb-2 text-left">Rank</th>
+                    <th className="pb-2 text-left">Username</th>
+                    <th className="pb-2 text-right">Portfolio Value</th>
+                    <th className="pb-2 text-right">Return (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mockLeaderboard.map((leader) => (
+                    <tr key={leader.rank} className="border-b border-gray-700">
+                      <td className="py-2">{leader.rank}</td>
+                      <td className="py-2">{leader.username}</td>
+                      <td className="py-2 text-right">${leader.value.toFixed(2)}</td>
+                      <td className="py-2 text-right">{leader.returnPercent.toFixed(2)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
