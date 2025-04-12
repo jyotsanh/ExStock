@@ -11,7 +11,7 @@ export default function StockMarketCourse() {
     const fetchCourses = async () => {
       try {
         console.log('📡 Attempting to fetch course data...');
-        const res = await fetch('http://192.168.100.122:3000/courses/');
+        const res = await fetch('http://192.168.100.53:3000/courses/');
         console.log('✅ Response received:', res);
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
