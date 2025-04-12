@@ -1,12 +1,16 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const UserService = require('../services/userService'); 
+const UserService = require('../services/userService');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/config');
 
 const authController = {
   async signup(req, res) {
     try {
-      const { email, username, password, confirmPassword } = req.body;
+      const { userId, email, username, password, confirmPassword } = req.body;
+
+      if (!userId) {
+        return res.status(400).json({ message: 'userId (browserId) is required' });
+      }
 
       if (!email || !username || !password || !confirmPassword) {
         return res.status(400).json({ message: 'All fields are required' });
@@ -28,9 +32,14 @@ const authController = {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = await UserService.create({ email, username, password: hashedPassword });
+      const user = await UserService.create({
+        userId,
+        email,
+        username,
+        password: hashedPassword
+      });
 
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+      const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
       res.status(201).json({
         message: 'User created successfully',
@@ -40,12 +49,12 @@ const authController = {
           email: user.email,
           username: user.username,
           premium: user.premium,
-          balance: user.virtualCoins
+          balance: user.balance  // Make sure to match the field name in your model
         }
       });
 
     } catch (error) {
-      console.error(error);
+      console.error('Signup Error:', error);
       res.status(500).json({ message: 'Server error' });
     }
   },
@@ -69,7 +78,7 @@ const authController = {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+      const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
       res.json({
         message: 'Login successful',
@@ -79,15 +88,15 @@ const authController = {
           email: user.email,
           username: user.username,
           premium: user.premium,
-          balance: user.virtualCoins
+          balance: user.balance  // Ensure consistency with the field name in the model
         }
       });
 
     } catch (error) {
-      console.error(error);
+      console.error('Login Error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  },
 };
 
 module.exports = authController;
