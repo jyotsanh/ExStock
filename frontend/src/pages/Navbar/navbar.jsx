@@ -1,7 +1,7 @@
-// src/components/Navbar/navbar.jsx
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { HomeIcon, TrendingUpIcon, BookOpenIcon, BookmarkIcon, MessageCircleIcon, LogInIcon } from 'lucide-react';
+import { HomeIcon, TrendingUpIcon, BookOpenIcon, BookmarkIcon, MessageCircleIcon} from 'lucide-react';
 
 const Navbar = () => {
   const navItems = [
@@ -10,7 +10,7 @@ const Navbar = () => {
     { name: 'Learning Modules', path: '/learning-modules', icon: <BookOpenIcon size={20} /> },
     { name: 'Stock Terminology', path: '/stock-terminology', icon: <BookmarkIcon size={20} /> },
     { name: 'AI Assistant', path: '/ai-assistant', icon: <MessageCircleIcon size={20} /> },
-    { name: 'Login', path: '/login', icon: <LogInIcon size={20} /> },
+    ,
   ];
 
   return (
