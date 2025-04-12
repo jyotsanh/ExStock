@@ -9,7 +9,7 @@ import Login from './pages/login/login';
 import Signup from './pages/signup/Signup';
 import NotFound from './pages/NotFound';
 import Candle from './pages/candlechar/candleChart';
-
+import Live from './pages/VirtualTrading/livemarket'
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
@@ -46,6 +46,7 @@ const App = () => {
         </Route>
         <Route path="*" element={<NotFound />} />
         <Route path='/candle' element={<Candle />} />
+        <Route path='/live' element={<Live />} />
       </Routes>
     </Router>
   );
