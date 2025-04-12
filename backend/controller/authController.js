@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/users');
+const UserService = require('../services/userService'); 
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/config');
 
 const authController = {
@@ -16,8 +16,8 @@ const authController = {
         return res.status(400).json({ message: 'Passwords do not match' });
       }
 
-      const emailExists = await User.findByEmail(email);
-      const usernameExists = await User.findByUsername(username);
+      const emailExists = await UserService.findByEmail(email);
+      const usernameExists = await UserService.findByUsername(username);
 
       if (emailExists) {
         return res.status(400).json({ message: 'Email already in use' });
@@ -28,14 +28,20 @@ const authController = {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = await User.create({ email, username, password: hashedPassword });
+      const user = await UserService.create({ email, username, password: hashedPassword });
 
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
-      res.status(201).json({ 
+      res.status(201).json({
         message: 'User created successfully',
         token,
-        user: { id: user.id, email: user.email, username: user.username }
+        user: {
+          userId: user.userId,
+          email: user.email,
+          username: user.username,
+          premium: user.premium,
+          balance: user.virtualCoins
+        }
       });
 
     } catch (error) {
@@ -52,7 +58,7 @@ const authController = {
         return res.status(400).json({ message: 'Email/username and password are required' });
       }
 
-      const user = await User.findByEmailOrUsername(emailOrUsername);
+      const user = await UserService.findByEmailOrUsername(emailOrUsername);
 
       if (!user) {
         return res.status(401).json({ message: 'Invalid credentials' });
@@ -63,12 +69,18 @@ const authController = {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
-      res.json({ 
+      res.json({
         message: 'Login successful',
         token,
-        user: { id: user.id, email: user.email, username: user.username }
+        user: {
+          userId: user.userId,
+          email: user.email,
+          username: user.username,
+          premium: user.premium,
+          balance: user.virtualCoins
+        }
       });
 
     } catch (error) {
