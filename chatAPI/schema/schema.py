@@ -15,3 +15,12 @@ class StoreArguments(BaseModel):
     store_type: str = Field(
         "milvus", description="Type of storage to use. Defaults to 'milvus'."
     )
+
+
+from enum import Enum
+class StoreName(Enum):
+    stock_genius = "stock_genius"
+    ai_tutor = "ai_tutor"
+    course_seller = "ciurse_seller"
+
+    

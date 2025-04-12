@@ -14,6 +14,7 @@ class MyState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
     user_info: str
     current_message:str
+    prefers:str
     dialog_state: Annotated[
         list[
             Literal[
@@ -111,19 +112,19 @@ class CompleteOrEscalate(BaseModel):
 
 
 class ToCourseSuggestMaster(BaseModel):
-    """Transfers work to a specialized assistant to Course Suggestion Queries."""
+    """Transfers work to a specialized assistant When customer-queries are related asking for course suggestions based on their past progress or wants to see the courses we provide"""
     reason: str = Field(
         description="this request can be handle by this COurse Suggest assistant"
     )
 
 class ToStockGeniusMaster(BaseModel):
-    """Transfers work to a specialized assistant to Stock Genius Queries."""
+    """Transfers work to a specialized assistant to Stock Genius, When customer-queries are related asking for some technique, patterns to learn."""
     reason: str = Field(
         description="this request can be handle by this assistant"
     )
 
-class ToExopyCourseTutorMaster(BaseModel):
-    """Transfers work to a specialized assistant to Exopy Course Queries."""
+class ToPersonalizedTutorMaster(BaseModel):
+    """Transfers work to a specialized assistant to When customer-queries are related asking for some topics from course content."""
     reason: str = Field(
         description="this request can be handle by this assistant"
     )

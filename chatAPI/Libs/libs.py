@@ -66,7 +66,7 @@ from langchain_milvus import Milvus
 from langchain_milvus.retrievers import MilvusCollectionHybridSearchRetriever
 
 # dir: models imports
-from models import get_llm, get_embeddings
+from models.models import get_llm, get_embeddings
 
 # dir: Schema imports 
 from schema import *
@@ -79,6 +79,11 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 REDIS_SERVER=os.getenv('REDIS_SERVER')  or 'localhost'
+
+os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY2")
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+
+
 llm = get_llm(
                 model_name='gpt-4o-mini'
                 
@@ -91,7 +96,7 @@ json_parser = JsonOutputParser()
 
 
 # dir: models/model.py
-from models import VectorStore
+from models.db import VectorStore
 
 load_dotenv()
 LOCAL_HOST = os.getenv("LOCAL_HOST")
@@ -103,3 +108,7 @@ llm = get_llm(
             model_name='openai',
             temperature=0.6,
             )
+
+genius_collection_name = os.getenv("GENIUS_COLLECTION_NAME")
+ai_tutor_collection_name = os.getenv("AI_TUTOR_COLLECTION_NAME")
+our_course_collection_name = os.getenv("OUR_COURSE_COLLECTION_NAME")

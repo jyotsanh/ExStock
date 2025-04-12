@@ -1,6 +1,6 @@
 from Libs.libs import *
 
-from core.assistant import MyState, ToCourseSuggestMaster, ToExopyCourseTutorMaster, ToStockGeniusMaster
+from core.assistant import MyState, ToCourseSuggestMaster, ToPersonalizedTutorMaster, ToStockGeniusMaster
 
 
 def entry_primary_assistant_routes(state:MyState):
@@ -24,7 +24,7 @@ def entry_primary_assistant_routes(state:MyState):
         tool_routes = {
             ToCourseSuggestMaster.__name__: "update_stack_course_suggest",
             ToStockGeniusMaster.__name__: "update_stack_stock_genius",
-            ToExopyCourseTutorMaster.__name__: "update_stack_exopy_course_tutor",
+            ToPersonalizedTutorMaster.__name__: "update_stack_exopy_course_tutor",
         }
 
         return tool_routes.get(tool_name, "primary_assistant_tools")

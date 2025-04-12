@@ -1,7 +1,6 @@
 # dir: Libs 
 from Libs.libs import (
     ChatPromptTemplate,
-    llm
 )
 
 # file: prompts.py
@@ -12,6 +11,7 @@ from core.assistant import *
 
 def get_primary_assistant_runnable():
     try:
+        print("heheh")
         primary_assistant_prompt = ChatPromptTemplate.from_messages(
             [
                 (
@@ -22,13 +22,16 @@ def get_primary_assistant_runnable():
             ]
         )
 
-
+        llm = get_llm(
+                model_name='openai'
+                
+                )
         primary_assistant_runnable = primary_assistant_prompt | llm.bind_tools(
 
             [
                 ToCourseSuggestMaster,
                 ToStockGeniusMaster,
-                ToExopyCourseTutorMaster,
+                ToPersonalizedTutorMaster,
             ]
         )
         return primary_assistant_runnable

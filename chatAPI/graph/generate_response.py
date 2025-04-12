@@ -19,6 +19,7 @@ def generate_response(
             },
             "recursion_limit":10,
         }
+        print(f"sdfj")
         response = graph.invoke(
                 {
                     'messages': ('user', user_query),
@@ -33,7 +34,7 @@ def generate_response(
             return "Hi, there, How may I help you today?"
         
 
-        return response
+        return response["messages"][-1].content
     except Exception as e:
         print(f"[INFO] -> file `generate_response.py` -> function `generate_response`: \n{e}\n")
         return None

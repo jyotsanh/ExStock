@@ -25,13 +25,11 @@ from .routes import (
         entry_primary_assistant_routes,
         entry_course_suggest_master_assistant_routes,
         entry_exopy_course_master_assistant_routes,
+        entry_stock_genius_master_assistant_routes
     )
 
-from graph.tools import (
-    our_course_tool,
-    our_tutor_tool,
-    knowledge_of_stocks
-)
+def dumm_node(state:MyState):
+    return {}
 
 def build_graph(conn:sqlite3.Connection):
     try:
@@ -39,7 +37,7 @@ def build_graph(conn:sqlite3.Connection):
         builder.add_edge(START,"workflow_routes")
         builder.add_node(   
                             "workflow_routes", 
-                            entry_workflow_routes
+                            dumm_node
                         )
 
         builder.add_conditional_edges(
@@ -116,7 +114,7 @@ def build_graph(conn:sqlite3.Connection):
 
         builder.add_conditional_edges(
             "stock_genius_master_assistant",
-            entry_exopy_course_master_assistant_routes,
+            entry_stock_genius_master_assistant_routes,
             [
                 "stock_genius_tutor_tools",
                 "leaveskill",
