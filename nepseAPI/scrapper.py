@@ -263,3 +263,41 @@ async def websocket_endpoint(websocket: WebSocket):
             await browser.close()
         if websocket.application_state != WebSocketState.DISCONNECTED:
             await websocket.close()
+
+import pandas as pd
+import os
+
+def fetch_price_history(SymbolNumber: str, page: int = 1):
+    try:
+        file_path = f"stocks_data/{SymbolNumber.upper()}.csv"
+        if not os.path.exists(file_path):
+            print(f"No data found for symbol: {SymbolNumber}")
+            file_path = "stocks_data/ACLBSL.csv"
+        df = pd.read_csv(file_path)
+        page_size = 20
+        start = (page - 1) * page_size
+        end = start + page_size
+
+        if start >= len(df):
+            print(f"Page {page} is out of range.")
+            return None
+
+        return df.iloc[start:end]
+    except Exception as e:
+        print(f"fetch_price_history error: {e}")
+        return None
+
+@app.get("/{SymbolNumber}/price/{page}")
+def get_price_history(SymbolNumber: str, page: int=1):
+    if page<=0:
+        page = 1
+    if page >5:
+        page =5
+    data = fetch_price_history(SymbolNumber, page=page)
+    if data is not None:
+        return data.to_dict(orient="records")
+    
+    return {
+        "symbol": SymbolNumber,
+        "result": "Stock not found"
+    }
