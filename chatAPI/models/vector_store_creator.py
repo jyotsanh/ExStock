@@ -14,7 +14,7 @@ def update_genius_store():
         collection_name=genius_collection_name,
         path = "data/stock_book.pdf"
     )
-    genius_instance.create_vector_store(max_chunk_size=300)
+    genius_instance.create_vector_store(max_chunk_size=200)
     return "genius store updated"
 
 
@@ -25,7 +25,7 @@ def update_ai_tutor():
         collection_name=ai_tutor_collection_name,
         path = "data/stock_book.pdf"
     )
-    ai_tutor_instance.create_vector_store(max_chunk_size=300)
+    ai_tutor_instance.create_vector_store(max_chunk_size=200)
     return "ai tutor store updated"
 
 
@@ -35,5 +35,5 @@ def update_our_course():
         collection_name=our_course_collection_name,
         path = "data/courses.json"
     )
-    our_course_instance.create_vector_store(max_chunk_size=300)
+    our_course_instance.create_vector_store(max_chunk_size=200)
     return "our course store updated"

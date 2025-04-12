@@ -85,3 +85,27 @@ def chat_response(query:str,senderId:str,metadata={},source:str="web"):
             "result":"Hi, How may i assist you today?"
         }
         return response
+
+@app.get("/tresponse")
+def chat_response(query:str,senderId:str,metadata={},source:str="web"):
+    try:
+        print(f"[INFO] -> query: {query} | senderId: {senderId} | metadata: {metadata} | source: {source}")
+        if isinstance(metadata, str):
+            metadata = json.loads(metadata) if metadata else {}
+            return {
+                "result":query,
+                "Metadat":metadata,
+                "SENDER":senderId
+            }
+        else:
+            fallback_res = {
+                "result":"Hey, there how can i help you today"
+            }
+            return fallback_res
+            
+    except Exception as e:
+        print(f"[ERROR] -> file server.py -> function `chat_response`: {e}")
+        response = {
+            "result":"wrong vayo!!"
+        }
+        return response

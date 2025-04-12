@@ -23,7 +23,6 @@ async def connect_to_stock_websocket():
                     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     print(f"\n[{current_time}] Received data for {len(data)} stocks:")
                     
-                    print(f"Data : {data} \n")
                         
                 except websockets.exceptions.ConnectionClosed:
                     print("Connection closed, attempting to reconnect...")

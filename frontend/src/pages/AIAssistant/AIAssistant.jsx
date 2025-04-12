@@ -1,64 +1,155 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
-const AIAssistant = () => {
-  const [input, setInput] = useState("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
+const Chatbot = () => {
+  const [query, setQuery] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [metadata, setMetadata] = useState(null);
+  const [senderId, setSenderId] = useState('');
+  const [prefers, setPrefers] = useState('english');
 
-  const handleAsk = async () => {
-    if (!input.trim()) return;
-    setLoading(true);
-    setResponse("");
+  // Save or generate browser ID
+  useEffect(() => {
+    let browserId = localStorage.getItem('browserId');
+    if (!browserId) {
+      browserId = uuidv4();
+      localStorage.setItem('browserId', browserId);
+    }
+    setSenderId(browserId);
+
+    // Fetch metadata from backend
+    const fetchMetadata = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/user-metadata/${browserId}`);
+        setMetadata(res.data);
+      } catch (err) {
+        console.error('Error fetching metadata:', err);
+      }
+    };
+
+    fetchMetadata();
+  }, []);
+
+  const sendMessage = async () => {
+    if (!query.trim()) return;
+
+    // Show user message
+    setMessages((prev) => [...prev, { from: 'user', text: query }]);
 
     try {
-      // Dummy response - replace with your actual AI backend API
-      const res = await fetch("https://api.example.com/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: input }),
-      });
+      const payload = {
+        query,
+        senderId,
+        prefers,
+        metadata,
+      };
 
-      const data = await res.json();
-      setResponse(data.answer || "No response received.");
+      const res = await axios.post('http://192.168.100.88:8020/tresponse', payload);
+
+      const botReply = res?.data?.reply || 'Chatbot responded.';
+      setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
     } catch (err) {
-      setResponse("Error talking to the assistant.");
-    } finally {
-      setLoading(false);
+      console.error('Error sending message:', err);
+      setMessages((prev) => [
+        ...prev,
+        { from: 'bot', text: 'Failed to get response from chatbot.' },
+      ]);
     }
+
+    setQuery('');
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-gray-900 rounded-2xl shadow-lg p-6 space-y-4">
-        <h1 className="text-2xl font-bold text-cyan-400">AI Assistant</h1>
-
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            className="flex-1 p-3 border border-gray-700 bg-gray-800 text-cyan-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            placeholder="Ask me anything..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAsk()}
-          />
-          <button
-            onClick={handleAsk}
-            className="bg-cyan-600 text-white px-4 py-2 rounded-xl hover:bg-cyan-700 transition"
+    <div style={styles.container}>
+      <h2>📚 Smart Chatbot</h2>
+      <div style={styles.chatBox}>
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            style={{
+              ...styles.message,
+              alignSelf: msg.from === 'user' ? 'flex-end' : 'flex-start',
+              backgroundColor: msg.from === 'user' ? '#d1e7dd' : '#f8d7da',
+            }}
           >
-            Ask
-          </button>
-        </div>
+            {msg.text}
+          </div>
+        ))}
+      </div>
 
-        <div className="min-h-[100px] p-4 bg-gray-800 text-cyan-400 rounded-xl">
-          {loading ? (
-            <p className="animate-pulse">Thinking...</p>
-          ) : (
-            <p>{response}</p>
-          )}
-        </div>
+      <div style={styles.controls}>
+        <select
+          value={prefers}
+          onChange={(e) => setPrefers(e.target.value)}
+          style={styles.select}
+        >
+          <option value="english">English</option>
+          <option value="nepali">Nepali</option>
+        </select>
+
+        <input
+          type="text"
+          placeholder="Type your query..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          style={styles.input}
+        />
+        <button onClick={sendMessage} style={styles.button}>
+          Send
+        </button>
       </div>
     </div>
   );
 };
 
-export default AIAssistant;
+export default Chatbot;
+
+const styles = {
+  container: {
+    maxWidth: '600px',
+    margin: '30px auto',
+    padding: '20px',
+    border: '2px solid #ccc',
+    borderRadius: '12px',
+    fontFamily: 'sans-serif',
+  },
+  chatBox: {
+    height: '300px',
+    overflowY: 'auto',
+    border: '1px solid #ddd',
+    padding: '10px',
+    marginBottom: '15px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    backgroundColor: '#f9f9f9',
+  },
+  message: {
+    padding: '10px 15px',
+    borderRadius: '16px',
+    maxWidth: '70%',
+  },
+  controls: {
+    display: 'flex',
+    gap: '10px',
+    alignItems: 'center',
+  },
+  select: {
+    padding: '5px',
+  },
+  input: {
+    flex: 1,
+    padding: '10px',
+    borderRadius: '8px',
+    border: '1px solid #ccc',
+  },
+  button: {
+    padding: '10px 15px',
+    backgroundColor: '#0d6efd',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+  },
+};

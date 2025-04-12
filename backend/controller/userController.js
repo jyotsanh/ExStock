@@ -58,7 +58,81 @@ const addCourseToUser = async (req, res) => {
   }
 };
 
+const getUserPortfolio = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found." });
+
+    const trades = await Trade.find({ user: userId }).sort({ timestamp: -1 });
+
+    if (trades.length === 0) {
+      return res.json({
+        virtualCoins: user.virtualCoins,
+        portfolio: [],
+        transactionHistory: [],
+      });
+    }
+
+    const holdings = {};
+
+    trades.forEach(trade => {
+      const { symbol, quantity, action, price, timestamp } = trade;
+
+      if (!holdings[symbol]) {
+        holdings[symbol] = {
+          symbol,
+          quantity: 0,
+          totalCost: 0,
+          lastTradeDate: timestamp
+        };
+      }
+
+      if (action === "buy") {
+        holdings[symbol].quantity += quantity;
+        holdings[symbol].totalCost += price * quantity;
+      } else if (action === "sell") {
+        holdings[symbol].quantity -= quantity;
+        holdings[symbol].totalCost -= price * quantity;
+      }
+
+      holdings[symbol].lastTradeDate = timestamp;
+    });
+
+    const portfolio = Object.values(holdings)
+      .filter(h => h.quantity > 0)
+      .map(h => ({
+        symbol: h.symbol,
+        quantity: h.quantity,
+        avgBuyPrice: (h.totalCost / h.quantity).toFixed(2),
+        totalInvested: h.totalCost.toFixed(2),
+        lastTradeDate: h.lastTradeDate,
+      }));
+
+    const transactionHistory = trades.map(t => ({
+      symbol: t.symbol,
+      action: t.action,
+      quantity: t.quantity,
+      price: t.price,
+      timestamp: t.timestamp
+    }));
+
+    return res.json({
+      virtualCoins: user.virtualCoins,
+      portfolio,
+      transactionHistory
+    });
+
+  } catch (error) {
+    console.error("Error getting portfolio:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 module.exports = {
   getUserProfile,
   addCourseToUser,
+  getUserPortfolio,
 };
