@@ -179,3 +179,6 @@ backend/package-lock.json
 
 #frontend nodemodule
 frontend/nodemodule
+
+node_modules
+package-lock.json
