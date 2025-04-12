@@ -4,7 +4,7 @@ const getPortfolioWithoutLivePrice = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const trades = await Trade.find({ userId });
+    const trades = await Trade.find({ user: userId }); 
 
     if (trades.length === 0) {
       return res.status(404).json({ message: "No trades found for this user." });
@@ -35,14 +35,15 @@ const getPortfolioWithoutLivePrice = async (req, res) => {
       holdings[symbol].lastTradeDate = timestamp;
     });
 
-    // Filter out stocks with 0 or negative quantity
-    const portfolio = Object.values(holdings).filter(h => h.quantity > 0).map(h => ({
-      symbol: h.symbol,
-      quantity: h.quantity,
-      avgBuyPrice: (h.totalCost / h.quantity).toFixed(2),
-      lastTradeDate: h.lastTradeDate,
-      totalInvested: h.totalCost.toFixed(2),
-    }));
+    const portfolio = Object.values(holdings)
+      .filter(h => h.quantity > 0)
+      .map(h => ({
+        symbol: h.symbol,
+        quantity: h.quantity,
+        avgBuyPrice: (h.totalCost / h.quantity).toFixed(2),
+        lastTradeDate: h.lastTradeDate,
+        totalInvested: h.totalCost.toFixed(2),
+      }));
 
     return res.json({ portfolio });
 
