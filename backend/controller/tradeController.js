@@ -3,34 +3,46 @@ const User = require("../models/users");
 
 const saveTrade = async (req, res) => {
   try {
-    const { userId, symbol, action, quantity, price } = req.body;
+    const { userId, symbol, quantity, price, action } = req.body;
 
     if (!userId || !symbol || !action || !quantity || !price) {
       return res.status(400).json({ error: "All fields are required." });
     }
 
-   
-    const userExists = await User.findById(userId);
-    if (!userExists) {
-      return res.status(404).json({ error: "User not found." });
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found." });
+
+    const tradeCost = price * quantity;
+
+    if (action === "buy") {
+      if (user.virtualCoins < tradeCost) {
+        return res.status(400).json({ error: "Insufficient virtual coin balance." });
+      }
+      user.virtualCoins -= tradeCost;
+    } else if (action === "sell") {
+      user.virtualCoins += tradeCost;
+    } else {
+      return res.status(400).json({ error: "Invalid trade action. Use 'buy' or 'sell'." });
     }
 
-    const total = price * quantity;
+    await user.save();
 
     const trade = new Trade({
-      user: userId, 
+      user: userId,
       symbol,
-      action,
       quantity,
-      price
+      price,
+      action,
+      timestamp: new Date(),
     });
 
     await trade.save();
 
-    res.status(201).json({ message: "Trade saved successfully.", trade });
+    res.status(201).json({ message: "Trade saved successfully.", trade, virtualCoins: user.virtualCoins });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to save trade." });
+    console.error("Trade error:", err);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
