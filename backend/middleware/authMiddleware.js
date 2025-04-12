@@ -19,7 +19,7 @@ const authenticateToken = async (req, res, next) => {
     }
 
     req.user = {
-      id: user.id,
+      userId: user.userId,
       email: user.email,
       username: user.username
     };
