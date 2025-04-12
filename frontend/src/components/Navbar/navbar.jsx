@@ -24,7 +24,7 @@ const SideNavbar = () => {
       {/* Top Section */}
       <div>
         <div className="p-6">
-          <h1 className="text-2xl text-cyan-400">Himal AI</h1>
+          <h1 className="text-2xl text-cyan-400">ExoStock</h1>
           <p className="text-sm text-gray-400 mt-1">Stock Market Learning</p>
         </div>
 

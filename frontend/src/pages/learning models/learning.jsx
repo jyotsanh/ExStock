@@ -16,8 +16,8 @@ export default function StockMarketCourse() {
       setError(null);
 
       const endpoint = level
-        ? `http://192.168.100.53:3000/courses/level/${level}`
-        : `http://192.168.100.53:3000/courses/`;
+        ? `http://192.168.100.81:3000/courses/level/${level}`
+        : `http://192.168.100.81:3000/courses/`;
 
       console.log(`📡 Fetching from ${endpoint}`);
       const res = await fetch(endpoint);
