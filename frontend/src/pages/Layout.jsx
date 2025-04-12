@@ -18,11 +18,11 @@ const Layout = () => {
   return (
     <div className="flex h-screen bg-[#071428] text-white">
       {isLoggedIn && <Navbar />}
-      
+
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-[#0A1D3D] border-b border-gray-700 px-6 py-4 flex items-center justify-between">
           <h1 className="text-lg font-medium">Stock Market Learning Platform</h1>
-          
+
           <div className="flex items-center space-x-4">
             {isLoggedIn ? (
               <>

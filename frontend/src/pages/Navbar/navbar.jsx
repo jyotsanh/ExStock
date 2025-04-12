@@ -8,7 +8,7 @@ const Navbar = () => {
     { name: 'Dashboard', path: '/', icon: <HomeIcon size={20} /> },
     { name: 'Virtual Trading', path: '/virtual-trading', icon: <TrendingUpIcon size={20} /> },
     { name: 'Learning Modules', path: '/learning-modules', icon: <BookOpenIcon size={20} /> },
-    { name: 'Stock Terminology', path: '/stock-terminology', icon: <BookmarkIcon size={20} /> },
+    { name: 'Fun with Stock', path: '/stock-terminology', icon: <BookmarkIcon size={20} /> },
     { name: 'AI Assistant', path: '/ai-assistant', icon: <MessageCircleIcon size={20} /> },
     ,
   ];
@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <nav className="w-60 bg-[#0A1D3D] border-r border-gray-700 flex flex-col h-full">
       <div className="p-4 border-b border-gray-700">
-        <h1 className="text-2xl font-bold text-[#00FF88]">Himal AI</h1>
+        <h1 className="text-2xl font-bold text-[#00FF88]">ExoStock</h1>
         <p className="text-sm text-gray-300">Stock Market Learning</p>
       </div>
       
