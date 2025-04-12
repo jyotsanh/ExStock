@@ -5,7 +5,7 @@ import Layout from './pages/Layout';
 import Dashboard from './pages/Dashboard/Dashboard';
 import VirtualTrading from './pages/VirtualTrading/VirtualTrading';
 import LearningModules from './pages/LearningModules/LearningModules';
-import Login from './pages/login/login';
+import Login from './pages/login/Login';
 import Signup from './pages/signup/Signup';
 import NotFound from './pages/NotFound';
 import Candle from './pages/candlechar/candleChart';
