@@ -4,22 +4,28 @@ import LiveMarket from './livemarket';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('http://192.168.100.53:3000'); // your backend socket server
+const socket = io('ws://192.168.100.88:8015/ws/v2'); // WebSocket URL
 
-const formatCurrency = (value) => {
-  return `₨${value.toFixed(2)}`;
-};
+// Format currency to Nepali Rupees
+const formatCurrency = (value) => `₨${value.toFixed(2)}`;
 
-const userId = 'abc123'; // Use real user ID in production
+// User from localStorage
+const user = JSON.parse(localStorage.getItem('user'));
+const userId = user?.userId;
+
+if (!userId) {
+  console.error("User not logged in.");
+}
 
 const VirtualTrading = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [stockData, setStockData] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('buy');
-  const [coinBalance, setCoinBalance] = useState(10000); // Initial 10k virtual coins
+  const [coinBalance, setCoinBalance] = useState(0);
   const [message, setMessage] = useState('');
 
+  // Setup WebSocket
   useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected to WebSocket server');
@@ -34,6 +40,7 @@ const VirtualTrading = () => {
     };
   }, []);
 
+  // Search stock with debounce
   useEffect(() => {
     if (searchQuery.trim()) {
       const timeout = setTimeout(() => {
@@ -42,6 +49,18 @@ const VirtualTrading = () => {
       return () => clearTimeout(timeout);
     }
   }, [searchQuery]);
+
+  // Load balance from localStorage (only once)
+  useEffect(() => {
+    const storedBalance = localStorage.getItem('coinBalance');
+    if (storedBalance) {
+      setCoinBalance(parseFloat(storedBalance));
+    } else {
+      const initial = 100000; // default starting balance
+      setCoinBalance(initial);
+      localStorage.setItem('coinBalance', initial.toString());
+    }
+  }, []);
 
   const handleTrade = async () => {
     if (!stockData) {
@@ -57,7 +76,7 @@ const VirtualTrading = () => {
     }
 
     try {
-      const res = await axios.post('http://192.168.100.53:3000/trade/save', {
+      await axios.post('http://192.168.100.81:3000/trade/save', {
         userId,
         symbol: stockData.symbol,
         action: activeTab,
@@ -65,21 +84,20 @@ const VirtualTrading = () => {
         price: stockData.price,
       });
 
-      setCoinBalance((prev) =>
-        activeTab === 'buy' ? prev - total : prev + total
+      const newBalance =
+        activeTab === 'buy' ? coinBalance - total : coinBalance + total;
+
+      setCoinBalance(newBalance);
+      localStorage.setItem('coinBalance', newBalance.toFixed(2));
+
+      setMessage(
+        `Successfully ${activeTab === 'buy' ? 'bought' : 'sold'} ${quantity} ${stockData.symbol}`
       );
-      setMessage(`Successfully ${activeTab === 'buy' ? 'bought' : 'sold'} ${quantity} ${stockData.symbol}`);
     } catch (err) {
       console.error(err);
       setMessage('Trade failed.');
     }
   };
-
-  const mockLeaderboard = [
-    { rank: 1, username: 'trader123', value: 28750.45, returnPercent: 15.0 },
-    { rank: 2, username: 'stockPro', value: 25980.30, returnPercent: 12.9 },
-    { rank: 3, username: 'investorX', value: 24150.75, returnPercent: 10.6 },
-  ];
 
   return (
     <div className="flex flex-col h-full p-4">
@@ -169,33 +187,6 @@ const VirtualTrading = () => {
         {/* Right Section */}
         <div className="flex flex-col space-y-6">
           <LiveMarket />
-          <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
-            <h2 className="text-lg font-medium mb-4">Leaderboard</h2>
-            <div className="overflow-x-auto max-h-48 overflow-y-scroll">
-              <table className="w-full">
-                <thead>
-                  <tr className="text-gray-400 border-b border-gray-700">
-                    <th className="pb-2 text-left">Rank</th>
-                    <th className="pb-2 text-left">Username</th>
-                    <th className="pb-2 text-right">Value</th>
-                    <th className="pb-2 text-right">Return</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {mockLeaderboard.map((entry, index) => (
-                    <tr key={index} className="border-b border-gray-700">
-                      <td className="py-3">{entry.rank}</td>
-                      <td className="py-3">{entry.username}</td>
-                      <td className="py-3 text-right">{formatCurrency(entry.value)}</td>
-                      <td className={`py-3 text-right ${entry.returnPercent >= 0 ? 'text-[#00FF88]' : 'text-red-500'}`}>
-                        {entry.returnPercent.toFixed(2)}%
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
       </div>
     </div>

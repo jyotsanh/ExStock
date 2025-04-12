@@ -1,7 +1,7 @@
 // test.js
 const WebSocket = require('ws');
 
-const uri = "ws://192.168.100.88:8015/ws/stock";
+const uri = "ws://192.168.100.88:8015/ws/v2";
 
 function getCurrentTimestamp() {
     const now = new Date();

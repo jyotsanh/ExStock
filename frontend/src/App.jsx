@@ -12,6 +12,7 @@ import Candle from './pages/candlechar/candleChart';
 import Live from './pages/VirtualTrading/livemarket'
 import AIAssistant from './pages/AIAssistant/AIAssistant';
 import Learning from './pages/learning models/learning';
+import Trading from './pages/VirtualTrading/trading';
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
   return isAuthenticated ? children : <Navigate to="/login" replace />;
@@ -39,6 +40,7 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path='/ai-assistant' element={<AIAssistant />} />
           <Route path='/learning' element={<Learning />} />
+          <Route path='trading' element={<Trading />} />
           
           <Route path="virtual-trading" element={
             <ProtectedRoute><VirtualTrading /></ProtectedRoute>
