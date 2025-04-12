@@ -1,23 +1,25 @@
-const User = require('../models/users');
+const UserService = require('../services/userService');
 
-const userController = {
-  async getProfile(req, res) {
-    try {
-      const user = await User.findById(req.user.id);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      
-      res.json({
-        id: user.id,
-        email: user.email,
-        username: user.username
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await UserService.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
+
+    res.json({
+      userId: user._id,
+      email: user.email,
+      username: user.username,
+      premium: user.premium,
+      balance: user.virtualCoins
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-module.exports = userController;
+module.exports = { getUserProfile };
