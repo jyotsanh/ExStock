@@ -59,6 +59,9 @@ const App = () => {
           <Route path="stock-terminology" element={
             <ProtectedRoute><StockTerminology /></ProtectedRoute>
           } />
+           <Route path="ai-assistant" element={
+            <ProtectedRoute><AIAssistant/></ProtectedRoute>
+          } />
 
           {/* New Stock Terminology Game Routes */}
           <Route path="stock-terminology/flashcards" element={
