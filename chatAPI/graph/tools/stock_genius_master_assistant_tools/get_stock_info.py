@@ -4,7 +4,7 @@ def get_live_data_right_now(symbol:str):
     if data!=None:
         return data.json()
     else:
-        return None
+        return f"didn't get any data on the {symbol}"
 
 
 def get_stock_info_tool(symbol):
