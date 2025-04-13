@@ -6,11 +6,11 @@ import io from 'socket.io-client';
 
 // Initialize Socket.IO with proper configuration
 const socket = io('http://192.168.100.88:8015', {
-  path: '/ws/v2/socket.io',
-  transports: ['websocket'],
-  reconnection: true,
-  reconnectionAttempts: 3,
-  reconnectionDelay: 1000
+  path: '/ws/v2',
+  // transports: ['websocket'],
+  // reconnection: true,
+  // reconnectionAttempts: 3,
+  // reconnectionDelay: 1000
 });
 
 const formatCurrency = (value) => 
