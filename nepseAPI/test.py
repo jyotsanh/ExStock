@@ -22,6 +22,7 @@ async def connect_to_stock_websocket():
                     # Print timestamp and data count
                     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     print(f"\n[{current_time}] Received data for {len(data)} stocks:")
+                    print(data[1:10])
                     
                         
                 except websockets.exceptions.ConnectionClosed:
