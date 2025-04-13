@@ -11,7 +11,7 @@ import {
 const menuItems = [
   { name: "Dashboard", icon: <Home size={18} />, path: "/" },
   { name: "Virtual Trading", icon: <TrendingUp size={18} />, path: "/virtual-trading" },
-  { name: "Learning Modules", icon: <BookOpen size={18} />, path: "/learning-modules" },
+  { name: "Learning Modules", icon: <BookOpen size={18} />, path: "/learning" },
   { name: "Stock Terminology", icon: <Book size={18} />, path: "/stock-terminology" },
   { name: "AI Assistant", icon: <Bot size={18} />, path: "/ai-assistant" },
 ];
