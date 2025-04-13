@@ -21,9 +21,9 @@ const Dashboard = () => {
 
   
   const portfolioData = {
-    totalValue: 15420.75,
-    cashBalance: 4250.30,
-    profitLoss: 5.8,
+    totalValue: 10000.00,
+    cashBalance: 10000.00,
+    profitLoss: 0.0,
     isProfit: true,
   };
 
@@ -101,10 +101,13 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col h-full gap-6">
-      <h1 className="text-2xl font-bold">Market Overview</h1>
+      <div className="flex justify-center items-center w-full my-4">
+  <h1 className="text-2xl font-bold text-[#00FF88]">NepStock Lab</h1>
+</div>
+
 
       {/* Live Market Ticker - Enhanced with more stocks and better styling */}
-      <div className="bg-[#1A2D4D] rounded-lg p-4 shadow-lg w-full max-w-6xl h-32 mx-auto">
+      {/* <div className="bg-[#1A2D4D] rounded-lg p-4 shadow-lg w-full max-w-6xl h-32 mx-auto">
   <div className="flex flex-wrap justify-between">
     {marketData.map((stock, index) => (
       <div key={index} className="flex items-center space-x-2 px-4 py-1 border-r border-gray-700 last:border-r-0">
@@ -117,7 +120,7 @@ const Dashboard = () => {
       </div>
     ))}
   </div>
-</div>
+</div> */}
 {/* <div className="bg-[#1A2D4D] rounded-lg p-4 shadow-lg overflow-x-auto w-full max-w-6xl h-32 mx-auto">
         <div className="flex justify-between min-w-max">
           {marketData.map((stock, index) => (
