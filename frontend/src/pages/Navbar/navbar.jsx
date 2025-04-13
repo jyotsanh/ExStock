@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <nav className="w-60 bg-[#0A1D3D] border-r border-gray-700 flex flex-col h-full">
       <div className="p-4 border-b border-gray-700">
-        <h1 className="text-2xl font-bold text-[#00FF88]">ExoStock</h1>
+        <h1 className="text-2xl font-bold text-[#00FF88]">NepStock Lab</h1>
         <p className="text-sm text-gray-300">Stock Market Learning</p>
       </div>
       
