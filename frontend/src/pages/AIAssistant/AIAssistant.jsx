@@ -21,7 +21,7 @@ const Chatbot = () => {
     // Fetch metadata from backend
     const fetchMetadata = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/user-metadata/${browserId}`);
+        const res = await axios.get(`http://192.168.100.81:5000/user-metadata/${browserId}`);
         setMetadata(res.data);
       } catch (err) {
         console.error('Error fetching metadata:', err);
