@@ -1,11 +1,12 @@
 from Libs.libs import *
 
-from graph.tools import knowledge_of_stocks
+from graph.tools import knowledge_of_stocks, get_stock_info_tool
 
 
 from core.assistant import *
 genius_assistant_tools = [
-    knowledge_of_stocks
+    knowledge_of_stocks,
+    get_stock_info_tool
 ]
 
 from prompts import STOCK_GENIUS_ASSISTANT
