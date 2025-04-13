@@ -335,9 +335,8 @@ const VirtualTrading = () => {
                 </div>
               ) : (
                 <LiveMarket 
-                  selectedStock={selectedStock?.symbol} 
-                  market="nepse"
-                  onDataLoad={() => setIsFetchingStock(false)}
+               
+                 
                 />
               )}
             </div>
