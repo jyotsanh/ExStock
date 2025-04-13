@@ -6,38 +6,6 @@ export default function StockDetail() {
   const [details, setDetails] = useState(null);
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   console.log("Symbol:", symbol); 
-  //   const fetchStockDetails = async () => {
-
-  //     // console.log("this is ;from fetch", symbol)
-  //     try {
-  //       console.log(`Fetching data for ${symbol}...`);
-  //       const response = await fetch(`http://192.168.100.88:8015/${symbol}`);
-
-  //       console.log("this is respone", response)
-
-  //       // if (!response.ok) {
-  //       //   throw new Error(`HTTP error! Status: ${response.status}`);
-  //       // }
-
-  //       // const data = await response.json();
-  //       // console.log("Fetched data:", data); 
-  //       // setDetails(data);
-
-  //     } catch (err) {
-  //       console.error("Error fetching stock details:", err);
-  //       if (err.message.includes("NetworkError")) {
-  //         setError('Network error: Unable to reach the server.');
-  //       } 
-  //       else {
-  //         setError('Failed to fetch data one');
-  //       }
-  //     }
-  //   };
-
-  //   fetchStockDetails();
-  // }, [symbol]);
 
   useEffect(() => {
     console.log("Symbol:", symbol); 
