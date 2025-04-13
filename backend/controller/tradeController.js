@@ -9,7 +9,7 @@ const saveTrade = async (req, res) => {
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({ userId });
     if (!user) return res.status(404).json({ error: "User not found." });
 
     const tradeCost = price * quantity;
