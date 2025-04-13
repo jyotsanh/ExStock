@@ -65,8 +65,10 @@ def chat_response(query:str,senderId:str,metadata={},source:str="web"):
     try:
         print(f"[INFO] -> query: {query} | senderId: {senderId} | metadata: {metadata} | source: {source}")
         if isinstance(metadata, str):
+            
             metadata = json.loads(metadata) if metadata else {}
-        metadata['prefers'] = "english"
+            
+        # metadata['prefers'] = "english"
 
         response = generate_response(
             user_query = query,
@@ -98,7 +100,9 @@ def chat_response(query:str,senderId:str,metadata={},source:str="web"):
     try:
         print(f"[INFO] -> query: {query} | senderId: {senderId} | metadata: {metadata} | source: {source}")
         if isinstance(metadata, str):
+            print(f"metadat {metadata}")
             metadata = json.loads(metadata) if metadata else {}
+            print(f"metadat {metadata}")
             return {
                 "result":query,
                 "Metadat":metadata,

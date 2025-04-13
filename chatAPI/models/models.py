@@ -2,7 +2,7 @@ from Libs.libs import *
 
 load_dotenv()
 OPENAI_KEY = os.getenv("OPENAI_KEY")
-
+print(OPENAI_KEY)
 def get_llm(model_name:str="openai",temperature=0.6):
     try:
         if model_name == "openai":

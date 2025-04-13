@@ -169,8 +169,8 @@ def build_graph(conn:sqlite3.Connection):
         graph = builder.compile(
             checkpointer=memory
         )
-        from IPython.display import Image, display
-        graph.get_graph().draw_mermaid_png(output_file_path="./graph.png")
+        # from IPython.display import Image, display
+        # graph.get_graph().draw_mermaid_png(output_file_path="./graph.png")
         return graph
     except Exception as e:
 
