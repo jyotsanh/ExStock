@@ -26,9 +26,16 @@ if graph is None:
 
 
 from schema.schema import StoreName
+from fastapi.middleware.cors import CORSMiddleware
 # fast api server
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 REDIS_SERVER = os.getenv('REDIS_SERVER') or 'localhost'
 
 @app.get("/update_vector_store")
