@@ -1,6 +1,7 @@
 const UserService = require('../services/userService');
 const User = require('../models/users');
 const Course = require('../models/course');
+const Trade = require('../models/trade')
 
 const getUserProfile = async (req, res) => {
   try {
@@ -62,10 +63,12 @@ const getUserPortfolio = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await User.findById(userId);
+    // Find user by userId field, not _id
+    const user = await User.findOne({ userId });
     if (!user) return res.status(404).json({ error: "User not found." });
 
-    const trades = await Trade.find({ user: userId }).sort({ timestamp: -1 });
+    // Fetch trades by user._id (since in Trade schema user is ObjectId)
+    const trades = await Trade.find({ user: user._id }).sort({ timestamp: -1 });
 
     if (trades.length === 0) {
       return res.json({
@@ -129,7 +132,6 @@ const getUserPortfolio = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 module.exports = {
   getUserProfile,

@@ -21,9 +21,9 @@ const Dashboard = () => {
 
   
   const portfolioData = {
-    totalValue: 15420.75,
-    cashBalance: 4250.30,
-    profitLoss: 5.8,
+    totalValue: 10000.00,
+    cashBalance: 10000.00,
+    profitLoss: 0.0,
     isProfit: true,
   };
 
