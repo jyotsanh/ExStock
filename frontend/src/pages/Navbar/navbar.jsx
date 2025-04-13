@@ -10,6 +10,7 @@ const Navbar = () => {
     { name: 'Learning Modules', path: '/learning-modules', icon: <BookOpenIcon size={20} /> },
     { name: 'Fun with Stock', path: '/stock-terminology', icon: <BookmarkIcon size={20} /> },
     { name: 'AI Assistant', path: '/ai-assistant', icon: <MessageCircleIcon size={20} /> },
+    { name: 'User', path: '/user', icon: <MessageCircleIcon size={20} /> },
     ,
   ];
 

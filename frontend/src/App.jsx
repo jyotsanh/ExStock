@@ -15,6 +15,7 @@ import AIAssistant from './pages/AIAssistant/AIAssistant';
 import Learning from './pages/learning models/learning';
 import Trading from './pages/VirtualTrading/trading';
 import StockDetails from './pages/VirtualTrading/StockDetails';
+import User from './pages/profile/Userprofile';
 
 // Import Stock Game Components
 import StockTerminologyFlashcards from './pages/StockTerminology/games/StockTerminologyFlashcards';
@@ -52,6 +53,7 @@ const App = () => {
           {/* <Route path='/details' element={<StockDetails/>}/>  */}
           {/* <Route path="/stock/:symbol" component={<StockDetails/>} /> */}
           <Route path="/:symbol" element={<StockDetails />} />
+          
 
 
           
@@ -65,9 +67,10 @@ const App = () => {
           <Route path="stock-terminology" element={
             <ProtectedRoute><StockTerminology /></ProtectedRoute>
           } />
-           <Route path="ai-assistant" element={
-            <ProtectedRoute><AIAssistant/></ProtectedRoute>
-          } />
+           <Route path="virtual-trading" element={
+  <ProtectedRoute><VirtualTrading /></ProtectedRoute>
+} />
+
 
           {/* New Stock Terminology Game Routes */}
           <Route path="stock-terminology/flashcards" element={
@@ -79,6 +82,7 @@ const App = () => {
           <Route path="stock-terminology/memory" element={
             <ProtectedRoute><StockFillBlankGame /></ProtectedRoute>
           } />
+          <Route path='/user'element={<User/>}/>
 
           <Route path="*" element={<NotFound />} />
         </Route>
