@@ -5,7 +5,13 @@ import axios from 'axios';
 import io from 'socket.io-client';
 
 // Initialize Socket.IO with proper configuration
-const ws = new WebSocket("ws://192.168.100.88:8015/ws/v2");
+const socket = io('http://192.168.100.88:8015', {
+  path: '/ws/v2/socket.io',
+  transports: ['websocket'],
+  reconnection: true,
+  reconnectionAttempts: 3,
+  reconnectionDelay: 1000
+});
 
 const formatCurrency = (value) => 
   `₨${value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -331,7 +337,7 @@ const VirtualTrading = () => {
                 <LiveMarket 
                   selectedStock={selectedStock?.symbol} 
                   market="nepse"
-                  // onDataLoad={() => setIsFetchingStock(true)}
+                  onDataLoad={() => setIsFetchingStock(false)}
                 />
               )}
             </div>
