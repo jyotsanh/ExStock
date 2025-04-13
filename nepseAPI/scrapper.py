@@ -6,6 +6,19 @@ from bs4 import BeautifulSoup
 import requests
 import datetime
 app = FastAPI()
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
+
 NEPSE_URL = "https://nepalstock.com/today-price"
 MEROLagani = "https://merolagani.com/latestmarket.aspx"
 async def data_extractor_from_html(content):
