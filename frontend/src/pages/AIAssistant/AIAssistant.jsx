@@ -23,6 +23,7 @@ const Chatbot = () => {
       try {
         const res = await axios.get(`http://192.168.100.81:5000/user-metadata/${browserId}`);
         setMetadata(res.data);
+        console.log(res.data);
       } catch (err) {
         console.error('Error fetching metadata:', err);
       }
@@ -33,33 +34,36 @@ const Chatbot = () => {
 
   const sendMessage = async () => {
     if (!query.trim()) return;
-
+  
     // Show user message
     setMessages((prev) => [...prev, { from: 'user', text: query }]);
-
+  
     try {
       const payload = {
         query,
         senderId,
         prefers,
-        metadata,
+        metadata: JSON.stringify(metadata),
       };
+  
+      const res = await axios.get('http://192.168.100.88:8020/tresponse', {
+        params: payload,
+      });
 
-      const res = await axios.post('http://192.168.100.88:8020/tresponse', payload);
-
+      console.log('Bot response:', res.data);
       const botReply = res?.data?.reply || 'Chatbot responded.';
       setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
     } catch (err) {
-      console.error('Error sending message:', err);
+      console.error('Error details:', err?.response || err);
       setMessages((prev) => [
         ...prev,
         { from: 'bot', text: 'Failed to get response from chatbot.' },
       ]);
     }
-
+  
     setQuery('');
   };
-
+  
   return (
     <div style={styles.container}>
       <h2>📚 Smart Chatbot</h2>
