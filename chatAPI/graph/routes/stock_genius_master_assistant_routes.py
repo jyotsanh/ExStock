@@ -20,5 +20,5 @@ def entry_stock_genius_master_assistant_routes(state:MyState):
     if did_cancel:
         print(f"[INFO]-> stock_genius_master_assistant calls going to -> leaveskill -> main agent ")
         return 'leaveskill'
-
+    print(f"stock_genius_master_assistant calls going to -> {tool_calls} tools")
     return 'stock_genius_tutor_tools'
