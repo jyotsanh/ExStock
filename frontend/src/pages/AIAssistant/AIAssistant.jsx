@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Send, Zap, RefreshCw, Search, X, Info, TrendingUp, PieChart, DollarSign, BookOpen } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 const AIAssistant = () => {
   const [messages, setMessages] = useState([
@@ -12,71 +13,106 @@ const AIAssistant = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [activeTab, setActiveTab] = useState('chat');
+  const [metadata, setMetadata] = useState(null);
+  const [browserId, setBrowserId] = useState(null);
+  const [hasRefreshed, setHasRefreshed] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (inputMessage.trim() === '') return;
+  useEffect(() => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
-    // Add user message
+    if (isLoggedIn) {
+      // Get the user JSON string from localStorage
+      const userJsonString = localStorage.getItem('user');
+      
+      if (userJsonString) {
+        try {
+          // Parse the JSON string to get the user object
+          const userObj = JSON.parse(userJsonString);
+          const userId = userObj.userId;
+          
+          if (userId) {
+            setBrowserId(userId);
+            fetch(`http://192.168.100.81:3000/user-metadata/${userId}`)
+              .then(res => res.json())
+              .then(data => {
+                const userMeta = {
+                  user: {
+                    userId: userId,
+                  },
+                  ...data // Include any additional metadata from the API
+                };
+                setMetadata(userMeta);
+              })
+              .catch(err => console.error('Error fetching metadata:', err));
+          } else {
+            console.warn("No userId found in user object.");
+          }
+        } catch (err) {
+          console.error("Error parsing user JSON from localStorage:", err);
+        }
+      } else {
+        console.warn("No user data found in localStorage.");
+      }
+    } else {
+      console.warn("User is not logged in.");
+    }
+  }, []);
+
+  const sendMessage = (messageText) => {
+    if (!messageText.trim() || !browserId || !metadata) return;
+
     const newUserMessage = {
       id: messages.length + 1,
-      text: inputMessage,
+      text: messageText,
       sender: 'user'
     };
     
     setMessages([...messages, newUserMessage]);
-    setInputMessage('');
-    
-    // Show typing indicator
     setIsTyping(true);
-    
-    // Send GET request to FastAPI endpoint
-    const senderId = "user123"; // You can replace this with actual user ID if available
-    const apiUrl = `http://192.168.100.88:8020?query=${encodeURIComponent(inputMessage)}&senderId=${encodeURIComponent(senderId)}`;
-    
+
+    // Use browserId as senderId to maintain consistency
+    const apiUrl = `http://localhost:8000/response?query=${encodeURIComponent(messageText)}&senderId=${encodeURIComponent(browserId)}&metadata=${encodeURIComponent(JSON.stringify(metadata))}`;
+
     fetch(apiUrl)
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
       })
       .then(data => {
-        // Create AI message using the response from the API
         const newAiMessage = {
           id: messages.length + 2,
           text: data.result,
           sender: 'ai'
         };
-        
         setMessages(prevMessages => [...prevMessages, newAiMessage]);
       })
       .catch(error => {
         console.error('Error fetching response:', error);
-        
-        // Create error message if the API request fails
         const errorMessage = {
           id: messages.length + 2,
           text: "Sorry, I couldn't connect to the assistant service. Please try again later.",
           sender: 'ai'
         };
-        
         setMessages(prevMessages => [...prevMessages, errorMessage]);
       })
-      .finally(() => {
-        setIsTyping(false);
-      });
+      .finally(() => setIsTyping(false));
+  };
+
+  const handleSendMessage = () => {
+    if (inputMessage.trim()) {
+      sendMessage(inputMessage);
+      setInputMessage('');
+    }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
+    if (e.key === 'Enter') handleSendMessage();
   };
 
   const clearChat = () => {
@@ -88,6 +124,33 @@ const AIAssistant = () => {
       }
     ]);
   };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    
+    if (tab === 'chat' && metadata && browserId && !hasRefreshed) {
+      setHasRefreshed(true);
+  
+      // Send "restart" query silently (without UI update)
+      const restartApiUrl = `http://localhost:8000/response?query=${encodeURIComponent("restart")}&senderId=${encodeURIComponent(browserId)}&metadata=${encodeURIComponent(JSON.stringify(metadata))}`;
+      
+      fetch(restartApiUrl)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .catch(error => {
+          console.error('Error sending silent restart query:', error);
+        })
+        .finally(() => {
+          // Refresh the page after slight delay
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        });
+    }
+  };
+  
 
   const setSuggestedQuestion = (question) => {
     setInputMessage(question);
@@ -117,6 +180,20 @@ const AIAssistant = () => {
     }
   ];
 
+  // Function to render message with markdown support
+  const renderMessage = (message) => {
+    if (message.sender === 'ai') {
+      return (
+        <div className="prose prose-invert max-w-none">
+          <ReactMarkdown>
+            {message.text}
+          </ReactMarkdown>
+        </div>
+      );
+    }
+    return message.text;
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* AI Assistant Header */}
@@ -127,13 +204,13 @@ const AIAssistant = () => {
         </div>
         <div className="flex space-x-4">
           <button 
-            onClick={() => setActiveTab('chat')}
+            onClick={() => handleTabChange('chat')}
             className={`px-4 py-2 rounded-md ${activeTab === 'chat' ? 'bg-green-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}
           >
             Chat
           </button>
           <button 
-            onClick={() => setActiveTab('learn')}
+            onClick={() => handleTabChange('learn')}
             className={`px-4 py-2 rounded-md ${activeTab === 'learn' ? 'bg-green-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}
           >
             <div className="flex items-center space-x-2">
@@ -168,7 +245,7 @@ const AIAssistant = () => {
                         : 'bg-gray-800 text-gray-100'
                     }`}
                   >
-                    {message.text}
+                    {renderMessage(message)}
                   </div>
                 </div>
               ))}
