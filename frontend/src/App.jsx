@@ -14,6 +14,7 @@ import Live from './pages/VirtualTrading/livemarket'
 import AIAssistant from './pages/AIAssistant/AIAssistant';
 import Learning from './pages/learning models/learning';
 import Trading from './pages/VirtualTrading/trading';
+import StockDetails from './pages/VirtualTrading/StockDetails';
 
 // Import Stock Game Components
 import StockTerminologyFlashcards from './pages/StockTerminology/games/StockTerminologyFlashcards';
@@ -47,7 +48,12 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path='/ai-assistant' element={<AIAssistant />} />
           <Route path='/learning' element={<Learning />} />
-          <Route path='trading' element={<Trading />} />
+          <Route path='/trading' element={<Trading />} />
+          {/* <Route path='/details' element={<StockDetails/>}/>  */}
+          {/* <Route path="/stock/:symbol" component={<StockDetails/>} /> */}
+          <Route path="/:symbol" element={<StockDetails />} />
+
+
           
           <Route path="virtual-trading" element={
             <ProtectedRoute><VirtualTrading /></ProtectedRoute>
@@ -58,6 +64,9 @@ const App = () => {
 
           <Route path="stock-terminology" element={
             <ProtectedRoute><StockTerminology /></ProtectedRoute>
+          } />
+           <Route path="ai-assistant" element={
+            <ProtectedRoute><AIAssistant/></ProtectedRoute>
           } />
 
           {/* New Stock Terminology Game Routes */}

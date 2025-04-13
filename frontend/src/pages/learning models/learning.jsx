@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ChevronDown, ChevronUp, Lock, Unlock } from 'lucide-react';
 
 const COURSE_LEVELS = ['beginner', 'intermediate', 'advanced', 'expert'];
 
 export default function StockMarketCourse() {
   const [courseData, setCourseData] = useState([]);
   const [openLevel, setOpenLevel] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [unlockedCourses, setUnlockedCourses] = useState([]);
 
   const fetchCourses = async (level = null) => {
     try {
       setLoading(true);
       setError(null);
-
       const endpoint = level
         ? `http://192.168.100.81:3000/courses/level/${level}`
         : `http://192.168.100.81:3000/courses/`;
-
-      console.log(`📡 Fetching from ${endpoint}`);
       const res = await fetch(endpoint);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
       const data = await res.json();
       setCourseData(data);
     } catch (err) {
-      console.error('❌ Error:', err);
       setError('Failed to load course data. Please try again.');
     } finally {
       setLoading(false);
@@ -34,7 +30,7 @@ export default function StockMarketCourse() {
   };
 
   useEffect(() => {
-    fetchCourses(); // Load all on initial mount
+    fetchCourses();
   }, []);
 
   const handleLevelClick = (level) => {
@@ -42,114 +38,120 @@ export default function StockMarketCourse() {
     fetchCourses(level);
   };
 
-  const toggleLevel = (level) => {
-    setOpenLevel(openLevel === level ? null : level);
+  const toggleCourse = (id) => {
+    if (!unlockedCourses.includes(id)) {
+      setUnlockedCourses((prev) => [...prev, id]);
+    }
+    setOpenLevel(openLevel === id ? null : id);
   };
 
-  return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', textAlign: 'center' }}>
-        Stock Market Course
-      </h1>
+  const isUnlocked = (id) => unlockedCourses.includes(id);
 
-      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-        <p style={{ marginBottom: '0.5rem' }}>Filter by Course Level:</p>
-        {COURSE_LEVELS.map((level) => (
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-gray-950 text-white px-4 py-10">
+      <h1 className="text-4xl font-extrabold text-center mb-10 tracking-tight">📚 Learning Modules</h1>
+
+      {/* Filter Buttons */}
+      <div className="text-center mb-10">
+        <p className="mb-4 text-gray-300 text-lg">Select Course Level:</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          {COURSE_LEVELS.map((level) => (
+            <button
+              key={level}
+              onClick={() => handleLevelClick(level)}
+              className={`px-5 py-2 rounded-full text-sm font-semibold capitalize transition-all duration-300
+                ${
+                  selectedLevel === level
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
+                    : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                }`}
+            >
+              {level}
+            </button>
+          ))}
           <button
-            key={level}
-            onClick={() => handleLevelClick(level)}
-            style={{
-              margin: '0 0.5rem',
-              padding: '0.5rem 1rem',
-              borderRadius: '9999px',
-              border: selectedLevel === level ? '2px solid #2563eb' : '1px solid #ccc',
-              backgroundColor: selectedLevel === level ? '#2563eb' : 'white',
-              color: selectedLevel === level ? 'white' : '#111827',
-              cursor: 'pointer',
-              transition: '0.3s',
-              textTransform: 'capitalize',
+            onClick={() => {
+              setSelectedLevel(null);
+              fetchCourses();
             }}
+            className="ml-2 px-5 py-2 rounded-full text-sm font-semibold bg-gray-600 hover:bg-gray-500"
           >
-            {level}
+            Show All
           </button>
-        ))}
-        <button
-          onClick={() => {
-            setSelectedLevel(null);
-            fetchCourses(); // All courses
-          }}
-          style={{
-            marginLeft: '0.5rem',
-            padding: '0.5rem 1rem',
-            borderRadius: '9999px',
-            border: '1px solid #ccc',
-            backgroundColor: '#f3f4f6',
-            cursor: 'pointer',
-          }}
-        >
-          Show All
-        </button>
+        </div>
       </div>
 
-      {loading && <p style={{ textAlign: 'center' }}>Loading course data...</p>}
-      {error && <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>}
-
+      {/* Loader / Error / No Courses */}
+      {loading && <p className="text-center text-blue-400">⏳ Loading courses...</p>}
+      {error && <p className="text-center text-red-400">{error}</p>}
       {!loading && !error && courseData.length === 0 && (
-        <p style={{ textAlign: 'center' }}>No courses found for this level.</p>
+        <p className="text-center text-gray-400">No courses available for this level.</p>
       )}
 
-      {!loading && !error && (
-        <div style={{ display: 'grid', gap: '1rem' }}>
-          {courseData.map((course, index) => (
+      {/* Course Cards */}
+      <div className="grid gap-6 max-w-5xl mx-auto">
+        {courseData.map((course, index) => {
+          const unlocked = isUnlocked(course._id);
+          return (
             <div
               key={index}
-              style={{
-                border: '1px solid #e5e7eb',
-                borderRadius: '1rem',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              }}
+              onClick={() => toggleCourse(course._id)}
+              className={`bg-slate-800 rounded-2xl p-6 shadow-lg transition duration-300 cursor-pointer border border-slate-700 hover:shadow-xl ${
+                !unlocked ? 'opacity-60 hover:opacity-80' : 'opacity-100'
+              }`}
             >
-              <div style={{ padding: '1.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>
-                    {course.level.charAt(0).toUpperCase() + course.level.slice(1)} Level
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    {course.title || `${course.level.charAt(0).toUpperCase() + course.level.slice(1)} Level`}
+                    {unlocked ? (
+                      <Unlock size={18} className="text-green-400" />
+                    ) : (
+                      <Lock size={18} className="text-gray-400" />
+                    )}
                   </h2>
-                  <button
-                    onClick={() => toggleLevel(course._id)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    {openLevel === course._id ? <ChevronUp /> : <ChevronDown />}
-                  </button>
+                  <p className="text-gray-400 mt-1">{course.description}</p>
                 </div>
-                <p style={{ color: '#4b5563', marginTop: '0.5rem' }}>{course.description}</p>
-                {openLevel === course._id && (
-                  <>
-                    {course.topics && course.topics.length > 0 && (
-                      <ul
-                        style={{
-                          listStyle: 'disc',
-                          paddingLeft: '1.5rem',
-                          marginTop: '1rem',
-                          color: '#374151',
-                        }}
-                      >
-                        {course.topics.map((topic, i) => (
-                          <li key={i}>{topic}</li>
-                        ))}
-                      </ul>
-                    )}
-                    {course.link && (
-                      <p style={{ marginTop: '1rem' }}>
-                        🔗 <a href={course.link} target="_blank" rel="noopener noreferrer">{course.platform}</a>
-                      </p>
-                    )}
-                  </>
-                )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent double toggle
+                    toggleCourse(course._id);
+                  }}
+                  className="text-gray-300 hover:text-white transition"
+                >
+                  {openLevel === course._id ? <ChevronUp /> : <ChevronDown />}
+                </button>
               </div>
+
+              {/* Expanded Details */}
+              {openLevel === course._id && unlocked && (
+                <div className="mt-5 transition-all duration-300">
+                  {course.topics?.length > 0 && (
+                    <ul className="list-disc list-inside space-y-2 text-gray-300">
+                      {course.topics.map((topic, i) => (
+                        <li key={i} className="hover:text-white transition">{topic}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {course.link && (
+                    <p className="mt-4">
+                      <span className="text-blue-400">🔗 </span>
+                      <a
+                        href={course.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline text-blue-300 hover:text-blue-500 transition"
+                      >
+                        {course.platform || 'Course Link'}
+                      </a>
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }

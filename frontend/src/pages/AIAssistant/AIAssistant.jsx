@@ -1,155 +1,393 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
+import { useState, useEffect, useRef } from 'react';
+import { Send, Zap, RefreshCw, Search, X, Info, TrendingUp, PieChart, DollarSign, BookOpen } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
-const Chatbot = () => {
-  const [query, setQuery] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [metadata, setMetadata] = useState(null);
-  const [senderId, setSenderId] = useState('');
-  const [prefers, setPrefers] = useState('english');
-
-  // Save or generate browser ID
-  useEffect(() => {
-    let browserId = localStorage.getItem('browserId');
-    if (!browserId) {
-      browserId = uuidv4();
-      localStorage.setItem('browserId', browserId);
+const AIAssistant = () => {
+  const [messages, setMessages] = useState([
+    { 
+      id: 1, 
+      text: "Hello! I'm your Stock Market AI Assistant. How can I help you today?", 
+      sender: 'ai' 
     }
-    setSenderId(browserId);
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [activeTab, setActiveTab] = useState('chat');
+  const [metadata, setMetadata] = useState(null);
+  const [browserId, setBrowserId] = useState(null);
+  const [hasRefreshed, setHasRefreshed] = useState(false);
+  const messagesEndRef = useRef(null);
 
-    // Fetch metadata from backend
-    const fetchMetadata = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5000/user-metadata/${browserId}`);
-        setMetadata(res.data);
-      } catch (err) {
-        console.error('Error fetching metadata:', err);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLoggedIn) {
+      // Get the user JSON string from localStorage
+      const userJsonString = localStorage.getItem('user');
+      
+      if (userJsonString) {
+        try {
+          // Parse the JSON string to get the user object
+          const userObj = JSON.parse(userJsonString);
+          const userId = userObj.userId;
+          
+          if (userId) {
+            setBrowserId(userId);
+            fetch(`http://192.168.100.81:3000/user-metadata/${userId}`)
+              .then(res => res.json())
+              .then(data => {
+                const userMeta = {
+                  user: {
+                    userId: userId,
+                  },
+                  ...data // Include any additional metadata from the API
+                };
+                setMetadata(userMeta);
+              })
+              .catch(err => console.error('Error fetching metadata:', err));
+          } else {
+            console.warn("No userId found in user object.");
+          }
+        } catch (err) {
+          console.error("Error parsing user JSON from localStorage:", err);
+        }
+      } else {
+        console.warn("No user data found in localStorage.");
       }
-    };
-
-    fetchMetadata();
+    } else {
+      console.warn("User is not logged in.");
+    }
   }, []);
 
-  const sendMessage = async () => {
-    if (!query.trim()) return;
+  const sendMessage = (messageText) => {
+    if (!messageText.trim() || !browserId || !metadata) return;
 
-    // Show user message
-    setMessages((prev) => [...prev, { from: 'user', text: query }]);
+    const newUserMessage = {
+      id: messages.length + 1,
+      text: messageText,
+      sender: 'user'
+    };
+    
+    setMessages([...messages, newUserMessage]);
+    setIsTyping(true);
 
-    try {
-      const payload = {
-        query,
-        senderId,
-        prefers,
-        metadata,
-      };
+    // Use browserId as senderId to maintain consistency
+    const apiUrl = `http://localhost:8000/response?query=${encodeURIComponent(messageText)}&senderId=${encodeURIComponent(browserId)}&metadata=${encodeURIComponent(JSON.stringify(metadata))}`;
 
-      const res = await axios.post('http://192.168.100.88:8020/tresponse', payload);
+    fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
+        const newAiMessage = {
+          id: messages.length + 2,
+          text: data.result,
+          sender: 'ai'
+        };
+        setMessages(prevMessages => [...prevMessages, newAiMessage]);
+      })
+      .catch(error => {
+        console.error('Error fetching response:', error);
+        const errorMessage = {
+          id: messages.length + 2,
+          text: "Sorry, I couldn't connect to the assistant service. Please try again later.",
+          sender: 'ai'
+        };
+        setMessages(prevMessages => [...prevMessages, errorMessage]);
+      })
+      .finally(() => setIsTyping(false));
+  };
 
-      const botReply = res?.data?.reply || 'Chatbot responded.';
-      setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
-    } catch (err) {
-      console.error('Error sending message:', err);
-      setMessages((prev) => [
-        ...prev,
-        { from: 'bot', text: 'Failed to get response from chatbot.' },
-      ]);
+  const handleSendMessage = () => {
+    if (inputMessage.trim()) {
+      sendMessage(inputMessage);
+      setInputMessage('');
     }
+  };
 
-    setQuery('');
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSendMessage();
+  };
+
+  const clearChat = () => {
+    setMessages([
+      { 
+        id: 1, 
+        text: "Hello! I'm your Stock Market AI Assistant. How can I help you today?", 
+        sender: 'ai' 
+      }
+    ]);
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    
+    if (tab === 'chat' && metadata && browserId && !hasRefreshed) {
+      setHasRefreshed(true);
+  
+      // Send "restart" query silently (without UI update)
+      const restartApiUrl = `http://localhost:8000/response?query=${encodeURIComponent("restart")}&senderId=${encodeURIComponent(browserId)}&metadata=${encodeURIComponent(JSON.stringify(metadata))}`;
+      
+      fetch(restartApiUrl)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .catch(error => {
+          console.error('Error sending silent restart query:', error);
+        })
+        .finally(() => {
+          // Refresh the page after slight delay
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        });
+    }
+  };
+  
+
+  const setSuggestedQuestion = (question) => {
+    setInputMessage(question);
+  };
+
+  // Educational resources for the Learn tab
+  const educationalResources = [
+    {
+      title: "Understanding Stock Fundamentals",
+      description: "Learn how to analyze a company's financial health through balance sheets, income statements, and cash flow statements.",
+      icon: <Info size={20} className="text-green-500" />
+    },
+    {
+      title: "Technical Analysis Basics",
+      description: "Discover how to read charts, identify patterns, and use indicators to make trading decisions.",
+      icon: <TrendingUp size={20} className="text-green-500" />
+    },
+    {
+      title: "Portfolio Construction Strategies",
+      description: "Explore different approaches to building a resilient and balanced investment portfolio.",
+      icon: <PieChart size={20} className="text-green-500" />
+    },
+    {
+      title: "Investment Vehicles Compared",
+      description: "Compare stocks, ETFs, mutual funds, bonds, and other investment options.",
+      icon: <DollarSign size={20} className="text-green-500" />
+    }
+  ];
+
+  // Function to render message with markdown support
+  const renderMessage = (message) => {
+    if (message.sender === 'ai') {
+      return (
+        <div className="prose prose-invert max-w-none">
+          <ReactMarkdown>
+            {message.text}
+          </ReactMarkdown>
+        </div>
+      );
+    }
+    return message.text;
   };
 
   return (
-    <div style={styles.container}>
-      <h2>📚 Smart Chatbot</h2>
-      <div style={styles.chatBox}>
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            style={{
-              ...styles.message,
-              alignSelf: msg.from === 'user' ? 'flex-end' : 'flex-start',
-              backgroundColor: msg.from === 'user' ? '#d1e7dd' : '#f8d7da',
-            }}
+    <div className="flex flex-col h-full">
+      {/* AI Assistant Header */}
+      <div className="bg-gray-800 px-6 py-4 flex justify-between items-center border-b border-gray-700">
+        <div className="flex items-center space-x-3">
+          <Zap className="text-green-500" size={24} />
+          <h2 className="text-xl font-semibold text-white">AI Assistant</h2>
+        </div>
+        <div className="flex space-x-4">
+          <button 
+            onClick={() => handleTabChange('chat')}
+            className={`px-4 py-2 rounded-md ${activeTab === 'chat' ? 'bg-green-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}
           >
-            {msg.text}
+            Chat
+          </button>
+          <button 
+            onClick={() => handleTabChange('learn')}
+            className={`px-4 py-2 rounded-md ${activeTab === 'learn' ? 'bg-green-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}
+          >
+            <div className="flex items-center space-x-2">
+              <BookOpen size={18} />
+              <span>Learn</span>
+            </div>
+          </button>
+          <button 
+            onClick={clearChat}
+            className="text-gray-400 hover:text-white rounded-md p-2"
+            title="Clear conversation"
+          >
+            <RefreshCw size={20} />
+          </button>
+        </div>
+      </div>
+      
+      {activeTab === 'chat' ? (
+        <>
+          {/* Messages Container */}
+          <div className="flex-1 overflow-y-auto p-6 bg-gray-900">
+            <div className="max-w-4xl mx-auto space-y-6">
+              {messages.map((message) => (
+                <div 
+                  key={message.id} 
+                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div 
+                    className={`rounded-lg px-6 py-4 max-w-xl ${
+                      message.sender === 'user' 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-gray-800 text-gray-100'
+                    }`}
+                  >
+                    {renderMessage(message)}
+                  </div>
+                </div>
+              ))}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-gray-800 rounded-lg px-6 py-4 text-gray-300">
+                    <div className="flex space-x-2">
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
-        ))}
-      </div>
-
-      <div style={styles.controls}>
-        <select
-          value={prefers}
-          onChange={(e) => setPrefers(e.target.value)}
-          style={styles.select}
-        >
-          <option value="english">English</option>
-          <option value="nepali">Nepali</option>
-        </select>
-
-        <input
-          type="text"
-          placeholder="Type your query..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          style={styles.input}
-        />
-        <button onClick={sendMessage} style={styles.button}>
-          Send
-        </button>
-      </div>
+          
+          {/* Input Area */}
+          <div className="border-t border-gray-700 bg-gray-800 p-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  placeholder="Ask about stocks, trading, or analysis..."
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 pr-14 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  className="absolute right-3 text-green-500 hover:text-green-400 p-2 rounded-full hover:bg-gray-700"
+                  disabled={inputMessage.trim() === ''}
+                >
+                  <Send size={20} />
+                </button>
+              </div>
+              
+              {/* Suggested Questions */}
+              <div className="mt-4">
+                <p className="text-sm text-gray-400 mb-2">Popular questions:</p>
+                <div className="flex flex-wrap gap-2">
+                  <button 
+                    className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() => setSuggestedQuestion("What stocks are trending today?")}
+                  >
+                    Trending stocks
+                  </button>
+                  <button 
+                    className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() => setSuggestedQuestion("Explain P/E ratio in simple terms")}
+                  >
+                    Explain P/E ratio
+                  </button>
+                  <button 
+                    className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() => setSuggestedQuestion("How to analyze my portfolio?")}
+                  >
+                    Portfolio analysis
+                  </button>
+                  <button 
+                    className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() => setSuggestedQuestion("How do I read stock charts?")}
+                  >
+                    Reading charts
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        /* Learn Tab Content */
+        <div className="flex-1 overflow-y-auto p-6 bg-gray-900">
+          <div className="max-w-4xl mx-auto">
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold text-white mb-4">Educational Resources</h3>
+              <p className="text-gray-300 mb-6">
+                Enhance your stock market knowledge with these curated learning resources.
+              </p>
+              
+              {/* Search Bar */}
+              <div className="relative mb-8">
+                <input
+                  type="text"
+                  placeholder="Search for resources..."
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                />
+                <Search className="absolute left-4 top-3.5 text-gray-500" size={20} />
+              </div>
+              
+              {/* Resources Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {educationalResources.map((resource, index) => (
+                  <div key={index} className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:border-green-500 transition-all cursor-pointer">
+                    <div className="flex items-center mb-4">
+                      {resource.icon}
+                      <h4 className="text-lg font-medium text-white ml-3">{resource.title}</h4>
+                    </div>
+                    <p className="text-gray-300 mb-4">{resource.description}</p>
+                    <button className="text-green-500 hover:text-green-400 text-sm font-medium flex items-center">
+                      Learn more
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Quick Reference Guide */}
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-4">Quick Reference Guide</h3>
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                <div className="space-y-4">
+                  <div>
+                    <h5 className="text-md font-medium text-white mb-2">Common Stock Market Terms</h5>
+                    <ul className="list-disc list-inside text-gray-300 space-y-1">
+                      <li><span className="text-green-500 font-medium">Bull Market</span> - A market characterized by rising prices and optimism</li>
+                      <li><span className="text-green-500 font-medium">Bear Market</span> - A market characterized by falling prices and pessimism</li>
+                      <li><span className="text-green-500 font-medium">Dividend</span> - A portion of a company's earnings paid to shareholders</li>
+                      <li><span className="text-green-500 font-medium">Market Cap</span> - The total value of a company's outstanding shares</li>
+                      <li><span className="text-green-500 font-medium">Volatility</span> - The rate at which the price of a security increases or decreases</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h5 className="text-md font-medium text-white mb-2">Key Investment Strategies</h5>
+                    <ul className="list-disc list-inside text-gray-300 space-y-1">
+                      <li><span className="text-green-500 font-medium">Value Investing</span> - Seeking undervalued stocks with strong fundamentals</li>
+                      <li><span className="text-green-500 font-medium">Growth Investing</span> - Focusing on stocks with above-average growth potential</li>
+                      <li><span className="text-green-500 font-medium">Dollar-Cost Averaging</span> - Investing fixed amounts at regular intervals</li>
+                      <li><span className="text-green-500 font-medium">Income Investing</span> - Prioritizing investments that generate regular income</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Chatbot;
-
-const styles = {
-  container: {
-    maxWidth: '600px',
-    margin: '30px auto',
-    padding: '20px',
-    border: '2px solid #ccc',
-    borderRadius: '12px',
-    fontFamily: 'sans-serif',
-  },
-  chatBox: {
-    height: '300px',
-    overflowY: 'auto',
-    border: '1px solid #ddd',
-    padding: '10px',
-    marginBottom: '15px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    backgroundColor: '#f9f9f9',
-  },
-  message: {
-    padding: '10px 15px',
-    borderRadius: '16px',
-    maxWidth: '70%',
-  },
-  controls: {
-    display: 'flex',
-    gap: '10px',
-    alignItems: 'center',
-  },
-  select: {
-    padding: '5px',
-  },
-  input: {
-    flex: 1,
-    padding: '10px',
-    borderRadius: '8px',
-    border: '1px solid #ccc',
-  },
-  button: {
-    padding: '10px 15px',
-    backgroundColor: '#0d6efd',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-  },
-};
+export default AIAssistant;

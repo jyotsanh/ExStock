@@ -1,196 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import { SearchIcon, TrendingUpIcon, TrendingDownIcon } from 'lucide-react';
-import LiveMarket from './livemarket';
-import axios from 'axios';
-import io from 'socket.io-client';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const socket = io('ws://192.168.100.88:8015/ws/v2'); // WebSocket URL
+const allStockSymbols = [
+  'GCIL', 'GFCL', 'GHL', 'GIBF1', 'GILB', 'GILBPO', 'GLBSL', 'GLH', 'GMFBS', 'GMFIL', 'GMLI', 'GRDBL',
+  'GSY', 'GUFL', 'GVL', 'GWFD83', 'H8020', 'HATHY', 'HBL', 'HDHPC', 'HDL', 'HEI', 'HEIP', 'HHL', 'HIDCL',
+  'HIDCLP', 'HLBSL', 'HLI', 'HPPL', 'HRL', 'HURJA', 'ICFC', 'ICFCD83', 'ICFCD88', 'IGI', 'IHL', 'ILBS',
+  'ILBSP', 'ILI', 'JBBL', 'JBLB', 'JFL', 'JOSHI', 'JSLBB', 'KBL', 'KBLD89', 'KBSH', 'KDBY', 'KDL', 'KEF',
+  // ...add all remaining symbols
+];
 
-// Format currency to Nepali Rupees
-const formatCurrency = (value) => `₨${value.toFixed(2)}`;
+export default function LiveStockTable() {
+  const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
-// User from localStorage
-const user = JSON.parse(localStorage.getItem('user'));
-const userId = user?.userId;
-
-if (!userId) {
-  console.error("User not logged in.");
-}
-
-const VirtualTrading = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [stockData, setStockData] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState('buy');
-  const [coinBalance, setCoinBalance] = useState(0);
-  const [message, setMessage] = useState('');
-
-  // Setup WebSocket
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to WebSocket server');
-    });
+    const socket = new WebSocket('ws://192.168.100.88:8015/ws/v2');
 
-    socket.on('stockData', (data) => {
-      setStockData(data);
-    });
+    socket.onmessage = (event) => {
+      try {
+        const rawData = JSON.parse(event.data);
+        if (!Array.isArray(rawData)) return;
 
-    return () => {
-      socket.disconnect();
+        const filteredData = rawData.filter(item =>
+          allStockSymbols.includes(item.symbol?.toUpperCase())
+        );
+
+        const formattedData = filteredData.map(item => ({
+          symbol: item.symbol,
+          ltp: item.ltp,
+          percent_change: item.percent_change,
+          open: item.open,
+          high: item.high,
+          low: item.low,
+          qty: item.qty,
+          pclose: item.pclose,
+          diff: item.diff,
+          timestamp: new Date().toISOString()
+        }));
+
+        setData(formattedData);
+      } catch (error) {
+        console.error('Error parsing WebSocket data:', error);
+      }
     };
+
+    return () => socket.close();
   }, []);
-
-  // Search stock with debounce
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      const timeout = setTimeout(() => {
-        socket.emit('searchStock', { symbol: searchQuery });
-      }, 400);
-      return () => clearTimeout(timeout);
-    }
-  }, [searchQuery]);
-
-  // Load balance from localStorage (only once)
-  useEffect(() => {
-    const storedBalance = localStorage.getItem('coinBalance');
-    if (storedBalance) {
-      setCoinBalance(parseFloat(storedBalance));
-    } else {
-      const initial = 100000; // default starting balance
-      setCoinBalance(initial);
-      localStorage.setItem('coinBalance', initial.toString());
-    }
-  }, []);
-
-  const handleTrade = async () => {
-    if (!stockData) {
-      setMessage('Please search and select a stock first.');
-      return;
-    }
-
-    const total = stockData.price * quantity;
-
-    if (activeTab === 'buy' && total > coinBalance) {
-      setMessage('Insufficient balance.');
-      return;
-    }
-
-    try {
-      await axios.post('http://192.168.100.81:3000/trade/save', {
-        userId,
-        symbol: stockData.symbol,
-        action: activeTab,
-        quantity,
-        price: stockData.price,
-      });
-
-      const newBalance =
-        activeTab === 'buy' ? coinBalance - total : coinBalance + total;
-
-      setCoinBalance(newBalance);
-      localStorage.setItem('coinBalance', newBalance.toFixed(2));
-
-      setMessage(
-        `Successfully ${activeTab === 'buy' ? 'bought' : 'sold'} ${quantity} ${stockData.symbol}`
-      );
-    } catch (err) {
-      console.error(err);
-      setMessage('Trade failed.');
-    }
-  };
 
   return (
-    <div className="flex flex-col h-full p-4">
-      <h1 className="text-2xl font-bold mb-6">Virtual Trading</h1>
-      <p className="text-sm text-gray-300 mb-2">Balance: {formatCurrency(coinBalance)}</p>
-      <p className="text-sm text-yellow-400 mb-4">{message}</p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-        {/* Left Section */}
-        <div className="flex flex-col space-y-6">
-          {/* Search Input */}
-          <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for stock symbols (e.g., AAPL)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#0A1D3D] border border-gray-700 rounded-lg px-4 py-2 pl-10 text-white focus:outline-none focus:ring-2 focus:ring-[#00FF88]"
-              />
-              <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={18} />
-            </div>
-          </div>
-
-          {/* Stock Info + Buy/Sell */}
-          {stockData && (
-            <div className="bg-[#1A2D4D] rounded-lg p-5 shadow-lg">
-              <div className="flex justify-between items-center mb-4">
-                <div>
-                  <h2 className="text-xl font-bold">{stockData.symbol}</h2>
-                  <p className="text-gray-300 text-sm">{stockData.name}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xl font-bold">{formatCurrency(stockData.price)}</p>
-                  <div className={`flex items-center justify-end ${stockData.change > 0 ? 'text-[#00FF88]' : 'text-red-500'}`}>
-                    {stockData.change > 0 ? <TrendingUpIcon size={16} /> : <TrendingDownIcon size={16} />}
-                    <span className="ml-1">
-                      {formatCurrency(Math.abs(stockData.change))} ({Math.abs(stockData.changePercent)}%)
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex mb-4">
-                <button
-                  className={`flex-1 py-2 text-center border-b-2 ${activeTab === 'buy' ? 'border-[#00FF88] text-[#00FF88]' : 'border-gray-700 text-gray-400 hover:text-white'}`}
-                  onClick={() => setActiveTab('buy')}
-                >
-                  Buy
-                </button>
-                <button
-                  className={`flex-1 py-2 text-center border-b-2 ${activeTab === 'sell' ? 'border-red-500 text-red-500' : 'border-gray-700 text-gray-400 hover:text-white'}`}
-                  onClick={() => setActiveTab('sell')}
-                >
-                  Sell
-                </button>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-gray-300 mb-2">Quantity</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                  className="w-full bg-[#0A1D3D] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#00FF88]"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-gray-300 mb-2">Total Cost</label>
-                <div className="w-full bg-[#0A1D3D] border border-gray-700 rounded-lg px-4 py-2 text-white">
-                  {formatCurrency(stockData.price * quantity)}
-                </div>
-              </div>
-
-              <button
-                onClick={handleTrade}
-                className={`w-full py-3 rounded-lg font-medium text-[#0A1D3D] ${activeTab === 'buy' ? 'bg-[#00FF88] hover:bg-[#00E07B]' : 'bg-red-500 hover:bg-red-600'}`}
-              >
-                {activeTab === 'buy' ? 'Buy' : 'Sell'} {stockData.symbol}
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Right Section */}
-        <div className="flex flex-col space-y-6">
-          <LiveMarket />
-        </div>
-      </div>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4 text-white">Live NEPSE Stock Data</h1>
+      <table className="w-full table-auto border-collapse border border-gray-700 text-white">
+        <thead className="bg-gray-800">
+          <tr>
+            <th className="border border-gray-700 px-2 py-1">Symbol</th>
+            <th className="border border-gray-700 px-2 py-1">LTP</th>
+            <th className="border border-gray-700 px-2 py-1">Change %</th>
+            <th className="border border-gray-700 px-2 py-1">Open</th>
+            <th className="border border-gray-700 px-2 py-1">High</th>
+            <th className="border border-gray-700 px-2 py-1">Low</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, idx) => (
+            <tr
+              key={idx}
+              className="hover:bg-gray-700 cursor-pointer"
+              onClick={() => navigate(`/${item.symbol.toUpperCase()}`)}
+            >
+              <td className="border border-gray-700 px-2 py-1">{item.symbol}</td>
+              <td className="border border-gray-700 px-2 py-1">{item.ltp}</td>
+              <td className="border border-gray-700 px-2 py-1">{item.percent_change}</td>
+              <td className="border border-gray-700 px-2 py-1">{item.open}</td>
+              <td className="border border-gray-700 px-2 py-1">{item.high}</td>
+              <td className="border border-gray-700 px-2 py-1">{item.low}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-};
-
-export default VirtualTrading;
+}

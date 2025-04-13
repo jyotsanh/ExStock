@@ -5,6 +5,19 @@ const UserService = {
     return await User.findOne({ email });
   },
 
+  async addMessageToUser(userId, message) {
+    return User.updateOne(
+      { userId },
+      { $push: { conversations: message } }
+    );
+  },
+
+  async getUserWithMessages(userId, limit = 50) {
+    return User.findOne({ userId })
+      .select('+conversations')
+      .slice('conversations', -limit);
+  },
+
   async findByUsername(username) {
     return await User.findOne({ username });
   },

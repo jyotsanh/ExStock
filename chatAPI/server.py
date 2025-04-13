@@ -26,9 +26,16 @@ if graph is None:
 
 
 from schema.schema import StoreName
+from fastapi.middleware.cors import CORSMiddleware
 # fast api server
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 REDIS_SERVER = os.getenv('REDIS_SERVER') or 'localhost'
 
 @app.get("/update_vector_store")
@@ -58,8 +65,10 @@ def chat_response(query:str,senderId:str,metadata={},source:str="web"):
     try:
         print(f"[INFO] -> query: {query} | senderId: {senderId} | metadata: {metadata} | source: {source}")
         if isinstance(metadata, str):
+            
             metadata = json.loads(metadata) if metadata else {}
-        metadata['prefers'] = "english"
+            
+        # metadata['prefers'] = "english"
 
         response = generate_response(
             user_query = query,
@@ -91,7 +100,9 @@ def chat_response(query:str,senderId:str,metadata={},source:str="web"):
     try:
         print(f"[INFO] -> query: {query} | senderId: {senderId} | metadata: {metadata} | source: {source}")
         if isinstance(metadata, str):
+            print(f"metadat {metadata}")
             metadata = json.loads(metadata) if metadata else {}
+            print(f"metadat {metadata}")
             return {
                 "result":query,
                 "Metadat":metadata,

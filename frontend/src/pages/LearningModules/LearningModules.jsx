@@ -1,219 +1,157 @@
+import React, { useEffect, useState } from 'react';
+import { ChevronDown, ChevronUp, Lock, Unlock } from 'lucide-react';
 
-import React, { useState } from 'react';
-import { CheckCircleIcon, ChevronDownIcon, ChevronUpIcon, BookmarkIcon } from 'lucide-react';
+const COURSE_LEVELS = ['beginner', 'intermediate', 'advanced', 'expert'];
 
-const LearningModules = () => {
-  const [expandedCategory, setExpandedCategory] = useState('beginner');
-  const [selectedLesson, setSelectedLesson] = useState({
-    id: 'b1',
-    title: 'Introduction to Stock Markets',
-    category: 'beginner',
-    progress: 60,
-  });
+export default function StockMarketCourse() {
+  const [courseData, setCourseData] = useState([]);
+  const [openLevel, setOpenLevel] = useState(null);
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [unlockedCourses, setUnlockedCourses] = useState([]);
 
-  // Mock data for demonstration
-  const modules = {
-    beginner: [
-      { id: 'b1', title: 'Introduction to Stock Markets', completed: false, progress: 60 },
-      { id: 'b2', title: 'Understanding Market Orders', completed: true, progress: 100 },
-      { id: 'b3', title: 'Basic Chart Analysis', completed: false, progress: 0 },
-      { id: 'b4', title: 'Market Indices Explained', completed: false, progress: 0 },
-    ],
-    intermediate: [
-      { id: 'i1', title: 'Technical Analysis Basics', completed: false, progress: 0 },
-      { id: 'i2', title: 'Fundamental Analysis', completed: false, progress: 0 },
-      { id: 'i3', title: 'Risk Management Strategies', completed: false, progress: 0 },
-    ],
-    advanced: [
-      { id: 'a1', title: 'Options Trading Fundamentals', completed: false, progress: 0 },
-      { id: 'a2', title: 'Advanced Chart Patterns', completed: false, progress: 0 },
-      { id: 'a3', title: 'Algorithmic Trading Concepts', completed: false, progress: 0 },
-    ],
+  const fetchCourses = async (level = null) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const endpoint = level
+        ? `http://192.168.100.81:3000/courses/level/${level}`
+        : `http://192.168.100.81:3000/courses/`;
+      const res = await fetch(endpoint);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data = await res.json();
+      setCourseData(data);
+    } catch (err) {
+      setError('Failed to load course data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const mockLessonContent = {
-    b1: {
-      sections: [
-        {
-          title: 'What Are Stock Markets?',
-          content: 'Stock markets are organized marketplaces where shares of publicly held companies are issued and traded. They provide companies with access to capital and investors with a slice of ownership in the company and the potential to realize gains based on the future performance of the company.',
-        },
-        {
-          title: 'Key Market Participants',
-          content: 'The main participants in stock markets include retail investors (individuals), institutional investors (pension funds, mutual funds, etc.), market makers, brokers, and regulators.',
-        },
-        {
-          title: 'Stock Market Indices',
-          content: 'Stock market indices like the S&P 500, Dow Jones, and NASDAQ are statistical measures that show the composite value of selected stocks, representing a particular market or sector.',
-        },
-      ],
-      video: 'intro_to_markets.mp4',
-      quiz: [
-        {
-          question: 'What is the primary purpose of stock markets?',
-          options: [
-            'To provide companies with access to capital',
-            'To provide entertainment for traders',
-            'To regulate company operations',
-            'To set product prices',
-          ],
-          correctAnswer: 0,
-        },
-        {
-          question: 'Which of the following is NOT a major stock market index?',
-          options: [
-            'S&P 500',
-            'Dow Jones Industrial Average',
-            'NASDAQ',
-            'Bitcoin 100',
-          ],
-          correctAnswer: 3,
-        },
-      ],
-    },
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const handleLevelClick = (level) => {
+    setSelectedLevel(level);
+    fetchCourses(level);
   };
 
-  const toggleCategory = (category) => {
-    setExpandedCategory(expandedCategory === category ? null : category);
+  const toggleCourse = (id) => {
+    if (!unlockedCourses.includes(id)) {
+      setUnlockedCourses((prev) => [...prev, id]);
+    }
+    setOpenLevel(openLevel === id ? null : id);
   };
 
-  const selectLesson = (lesson) => {
-    setSelectedLesson(lesson);
-  };
+  const isUnlocked = (id) => unlockedCourses.includes(id);
 
-  const renderLessonContent = () => {
-    const content = mockLessonContent[selectedLesson.id];
-    if (!content) return <div className="text-center py-12 text-gray-400">Select a lesson to view content</div>;
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-gray-950 text-white px-4 py-10">
+      <h1 className="text-4xl font-extrabold text-center mb-10 tracking-tight">📚 Learning Modules</h1>
 
-    return (
-      <div className="space-y-6">
-        {/* Progress Bar */}
-        <div className="bg-[#0A1D3D] h-2 rounded-full overflow-hidden">
-          <div 
-            className="bg-gradient-to-r from-[#00FF88] to-[#00BFFF] h-full"
-            style={{ width: `${selectedLesson.progress}%` }}
-          ></div>
-        </div>
-        <div className="text-sm text-right text-gray-400">Progress: {selectedLesson.progress}%</div>
-        
-        {/* Content Sections */}
-        <div className="space-y-8">
-          {content.sections.map((section, idx) => (
-            <div key={idx} className="space-y-3">
-              <h3 className="text-xl font-medium text-[#00FF88]">{section.title}</h3>
-              <p className="text-gray-300 leading-relaxed">{section.content}</p>
-            </div>
+      {/* Filter Buttons */}
+      <div className="text-center mb-10">
+        <p className="mb-4 text-gray-300 text-lg">Select Course Level:</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          {COURSE_LEVELS.map((level) => (
+            <button
+              key={level}
+              onClick={() => handleLevelClick(level)}
+              className={`px-5 py-2 rounded-full text-sm font-semibold capitalize transition-all duration-300
+                ${
+                  selectedLevel === level
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
+                    : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                }`}
+            >
+              {level}
+            </button>
           ))}
-        </div>
-        
-        {/* Video */}
-        {content.video && (
-          <div className="mt-8">
-            <h3 className="text-lg font-medium mb-3">Video Tutorial</h3>
-            <div className="bg-[#0A1D3D] h-48 rounded-lg flex items-center justify-center">
-              <div className="text-gray-400">Video player: {content.video}</div>
-            </div>
-          </div>
-        )}
-        
-        {/* Quiz */}
-        {content.quiz && (
-          <div className="mt-8">
-            <h3 className="text-xl font-medium text-[#00FF88] mb-4">Knowledge Check</h3>
-            <div className="space-y-6">
-              {content.quiz.map((question, qIdx) => (
-                <div key={qIdx} className="bg-[#0A1D3D] p-4 rounded-lg">
-                  <h4 className="font-medium mb-3">{question.question}</h4>
-                  <div className="space-y-2">
-                    {question.options.map((option, oIdx) => (
-                      <div 
-                        key={oIdx}
-                        className={`p-3 rounded cursor-pointer ${
-                          oIdx === question.correctAnswer 
-                            ? 'bg-green-900 bg-opacity-30 border border-green-500' 
-                            : 'bg-[#132447] hover:bg-[#1D3055]'
-                        }`}
-                      >
-                        {option}
-                        {oIdx === question.correctAnswer && (
-                          <CheckCircleIcon className="inline ml-2 h-4 w-4 text-green-500" />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Continue Button */}
-        <div className="mt-12 text-center">
-          <button className="bg-gradient-to-r from-[#00FF88] to-[#00BFFF] text-black font-medium py-3 px-6 rounded-full hover:opacity-90 transition-opacity">
-            Continue Learning
+          <button
+            onClick={() => {
+              setSelectedLevel(null);
+              fetchCourses();
+            }}
+            className="ml-2 px-5 py-2 rounded-full text-sm font-semibold bg-gray-600 hover:bg-gray-500"
+          >
+            Show All
           </button>
         </div>
       </div>
-    );
-  };
 
-  return (
-    <div className="max-w-6xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8 text-white">Learning Modules</h1>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sidebar */}
-        <div className="lg:col-span-1 space-y-4">
-          {/* Categories */}
-          {['beginner', 'intermediate', 'advanced'].map((category) => (
-            <div key={category} className="bg-[#0A1D3D] rounded-lg overflow-hidden">
-              <div 
-                className="flex justify-between items-center p-4 cursor-pointer"
-                onClick={() => toggleCategory(category)}
-              >
-                <h2 className="text-lg font-medium capitalize">{category}</h2>
-                {expandedCategory === category ? (
-                  <ChevronUpIcon className="h-5 w-5" />
-                ) : (
-                  <ChevronDownIcon className="h-5 w-5" />
-                )}
+      {/* Loader / Error / No Courses */}
+      {loading && <p className="text-center text-blue-400">⏳ Loading courses...</p>}
+      {error && <p className="text-center text-red-400">{error}</p>}
+      {!loading && !error && courseData.length === 0 && (
+        <p className="text-center text-gray-400">No courses available for this level.</p>
+      )}
+
+      {/* Course Cards */}
+      <div className="grid gap-6 max-w-5xl mx-auto">
+        {courseData.map((course, index) => {
+          const unlocked = isUnlocked(course._id);
+          return (
+            <div
+              key={index}
+              onClick={() => toggleCourse(course._id)}
+              className={`bg-slate-800 rounded-2xl p-6 shadow-lg transition duration-300 cursor-pointer border border-slate-700 hover:shadow-xl ${
+                !unlocked ? 'opacity-60 hover:opacity-80' : 'opacity-100'
+              }`}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    {course.title || `${course.level.charAt(0).toUpperCase() + course.level.slice(1)} Level`}
+                    {unlocked ? (
+                      <Unlock size={18} className="text-green-400" />
+                    ) : (
+                      <Lock size={18} className="text-gray-400" />
+                    )}
+                  </h2>
+                  <p className="text-gray-400 mt-1">{course.description}</p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent double toggle
+                    toggleCourse(course._id);
+                  }}
+                  className="text-gray-300 hover:text-white transition"
+                >
+                  {openLevel === course._id ? <ChevronUp /> : <ChevronDown />}
+                </button>
               </div>
-              
-              {expandedCategory === category && (
-                <div className="border-t border-[#132447]">
-                  {modules[category].map((lesson) => (
-                    <div 
-                      key={lesson.id}
-                      className={`p-4 flex items-center cursor-pointer ${
-                        selectedLesson.id === lesson.id ? 'bg-[#132447]' : 'hover:bg-[#132447]'
-                      }`}
-                      onClick={() => selectLesson({ ...lesson, category })}
-                    >
-                      {lesson.completed ? (
-                        <CheckCircleIcon className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                      ) : (
-                        <div className={`h-5 w-5 rounded-full mr-3 flex-shrink-0 ${
-                          lesson.progress > 0 ? 'bg-blue-500' : 'border border-gray-500'
-                        }`}></div>
-                      )}
-                      <span className="flex-grow">{lesson.title}</span>
-                      <BookmarkIcon className="h-4 w-4 text-gray-400 hover:text-[#00FF88] transition-colors" />
-                    </div>
-                  ))}
+
+              {/* Expanded Details */}
+              {openLevel === course._id && unlocked && (
+                <div className="mt-5 transition-all duration-300">
+                  {course.topics?.length > 0 && (
+                    <ul className="list-disc list-inside space-y-2 text-gray-300">
+                      {course.topics.map((topic, i) => (
+                        <li key={i} className="hover:text-white transition">{topic}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {course.link && (
+                    <p className="mt-4">
+                      <span className="text-blue-400">🔗 </span>
+                      <a
+                        href={course.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline text-blue-300 hover:text-blue-500 transition"
+                      >
+                        {course.platform || 'Course Link'}
+                      </a>
+                    </p>
+                  )}
                 </div>
               )}
             </div>
-          ))}
-        </div>
-        
-        {/* Content Area */}
-        <div className="lg:col-span-2 bg-[#071428] rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-6">{selectedLesson.title}</h2>
-          {renderLessonContent()}
-        </div>
+          );
+        })}
       </div>
     </div>
   );
-};
-
-export default LearningModules;
+}

@@ -104,22 +104,36 @@ const Dashboard = () => {
       <h1 className="text-2xl font-bold">Market Overview</h1>
 
       {/* Live Market Ticker - Enhanced with more stocks and better styling */}
-      <div className="bg-[#1A2D4D] rounded-lg p-4 shadow-lg overflow-x-auto w-full max-w-6xl h-32 mx-auto">
+      <div className="bg-[#1A2D4D] rounded-lg p-4 shadow-lg w-full max-w-6xl h-32 mx-auto">
+  <div className="flex flex-wrap justify-between">
+    {marketData.map((stock, index) => (
+      <div key={index} className="flex items-center space-x-2 px-4 py-1 border-r border-gray-700 last:border-r-0">
+        <span className="font-medium">{stock.symbol}</span>
+        <span className="text-gray-300">₨{stock.price.toFixed(2)}</span>
+        <span className={`flex items-center ${stock.change >= 0 ? 'text-[#00FF88]' : 'text-red-500'}`}>
+          {stock.change >= 0 ? <ArrowUpIcon size={16} /> : <ArrowDownIcon size={16} />}
+          {Math.abs(stock.change).toFixed(2)}%
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
+{/* <div className="bg-[#1A2D4D] rounded-lg p-4 shadow-lg overflow-x-auto w-full max-w-6xl h-32 mx-auto">
         <div className="flex justify-between min-w-max">
           {marketData.map((stock, index) => (
             <div key={index} className="flex items-center space-x- px-4 py-1 border-r border-gray-700 last:border-r-0">
               <span className="font-medium">{stock.symbol}</span>
               <span className="text-gray-300">${stock.price.toFixed(2)}</span>
-              <span className={`flex items-center ${
+              <span className={flex items-center ${
                 stock.change >= 0 ? 'text-[#00FF88]' : 'text-red-500'
-              }`}>
+              }}>
                 {stock.change >= 0 ? <ArrowUpIcon size={16} /> : <ArrowDownIcon size={16} />}
                 {Math.abs(stock.change).toFixed(2)}%
               </span>
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {isLoggedIn ? (
         <>
@@ -131,13 +145,13 @@ const Dashboard = () => {
                 <div className="flex justify-between">
                   <span className="text-gray-300">Total Value</span>
                   <span className="text-xl font-bold">
-                    ${portfolioData.totalValue.toLocaleString()}
+                    R.s{portfolioData.totalValue.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-300">Cash Balance</span>
                   <span className="text-lg font-semibold">
-                    ${portfolioData.cashBalance.toLocaleString()}
+                    R.s{portfolioData.cashBalance.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -168,14 +182,14 @@ const Dashboard = () => {
                 <span className="font-medium">Start Trading</span>
               </Link>
               <Link
-                to="/learning-modules"
+                to="/learning"
                 className="flex flex-col items-center justify-center p-4 bg-[#1A2D4D] rounded-lg hover:bg-[#253D5D] transition"
               >
                 <BookOpenIcon size={24} className="mb-2 text-[#00FF88]" />
                 <span className="font-medium">Learn Now</span>
               </Link>
               <Link
-                to="/chat-assistant"
+                to="/ai-assistant"
                 className="flex flex-col items-center justify-center p-4 bg-[#1A2D4D] rounded-lg hover:bg-[#253D5D] transition"
               >
                 <MessageCircleIcon size={24} className="mb-2 text-[#00FF88]" />

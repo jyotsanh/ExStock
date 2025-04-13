@@ -80,8 +80,6 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 
 REDIS_SERVER=os.getenv('REDIS_SERVER')  or 'localhost'
 
-os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY2")
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
 
 
 llm = get_llm(
